@@ -6,12 +6,12 @@
 
 FieldWidget::FieldWidget(QWidget *parent) :
     QWidget(parent),
-    pen_(QColor(0, 0, 255, 96))
+    pen(QColor(0, 0, 255, 96))
 {
     setFixedSize(200, 200);
-    pen_.setWidth(200);
-    //pen_.setCapStyle(Qt::RoundCap);
-    //pen_.setJoinStyle(Qt::RoundJoin);
+    pen.setWidth(200);
+    //pen.setCapStyle(Qt::RoundCap);
+    //pen.setJoinStyle(Qt::RoundJoin);
 }
 
 void FieldWidget::drawObject(const mmp::gui::Point& point, const QPixmap& pixmap)

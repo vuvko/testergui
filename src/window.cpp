@@ -4,14 +4,25 @@
 
 Window::Window(QWidget *parent) : QMainWindow(parent)
 {
+    /*
+     * BIG initialization part... MB just move it to window.ui file... It's TOO BIG
+     */
     timer = new QTimer(this);
     runningApp = NULL;
-
+    // Time-left labels
     leftA = new QLabel;
     leftA->setAlignment(Qt::AlignCenter);
     leftA->setFont(QFont("Calibri", 11));
 
+    leftB = new QLabel;
+    leftB->setAlignment(Qt::AlignCenter);
+    leftB->setFont(QFont("Calibri", 11));
+
+    // Default applications' paths
     aPath = "A.exe";
+    bPath = "B.exe";
+
+    // Players' labels
     captA = new QLabel("<a href=Red><font color=#ff0000>Red</font></a>");
     captA->setTextFormat(Qt::RichText);
     captA->setToolTip("A.exe");
@@ -19,6 +30,13 @@ Window::Window(QWidget *parent) : QMainWindow(parent)
     captA->setFont(QFont("Calibri", 13));
     connect(captA, SIGNAL(linkActivated(QString)), this, SLOT(chooseAexe(QString)));
 
+    captB = new QLabel("<a href=Blue><font color=#0000ff>Blue</font></a>");
+    captB->setToolTip("B.exe");
+    captB->setAlignment(Qt::AlignCenter);
+    captB->setFont(QFont("Calibri", 13));
+    connect(captB, SIGNAL(linkActivated(QString)), this, SLOT(chooseBexe(QString)));
+
+    // Score labels
     scoreA = new QLabel;
     scoreA->setAlignment(Qt::AlignCenter);
     scoreA->setFont(QFont("Calibri", 13));
@@ -31,17 +49,6 @@ Window::Window(QWidget *parent) : QMainWindow(parent)
     scoreB->setAlignment(Qt::AlignCenter);
     scoreB->setFont(QFont("Calibri", 13));
 
-    bPath = "B.exe";
-    captB = new QLabel("<a href=Blue><font color=#0000ff>Blue</font></a>");
-    captB->setToolTip("B.exe");
-    captB->setAlignment(Qt::AlignCenter);
-    captB->setFont(QFont("Calibri", 13));
-    connect(captB, SIGNAL(linkActivated(QString)), this, SLOT(chooseBexe(QString)));
-
-    leftB = new QLabel;
-    leftB->setAlignment(Qt::AlignCenter);
-    leftB->setFont(QFont("Calibri", 11));
-
     scoreBoard = new QHBoxLayout;
     scoreBoard->addWidget(leftA);
     scoreBoard->addWidget(captA);
@@ -51,6 +58,7 @@ Window::Window(QWidget *parent) : QMainWindow(parent)
     scoreBoard->addWidget(captB);
     scoreBoard->addWidget(leftB);
 
+    // Game log visualization
     textLog = new QListWidget();
     textLog->setFixedWidth(110);
     connect(textLog, SIGNAL(clicked(QModelIndex)), this, SLOT(reloadGUIMod(QModelIndex)));
@@ -60,6 +68,8 @@ Window::Window(QWidget *parent) : QMainWindow(parent)
     field = new FieldWidget();
     fieldContainer->addWidget(field, 1, 1, 8, 8);
 
+    // Field Coordinates
+    // TODO: do smth with this...
     QLabel *tmp = NULL;
     tmp = new QLabel("a"); tmp->setAlignment(Qt::AlignCenter); fieldContainer->addWidget(tmp, 0, 1, 1, 1);
     tmp = new QLabel("b"); tmp->setAlignment(Qt::AlignCenter); fieldContainer->addWidget(tmp, 0, 2, 1, 1);
@@ -87,9 +97,11 @@ Window::Window(QWidget *parent) : QMainWindow(parent)
     tmp = new QLabel("1"); tmp->setAlignment(Qt::AlignCenter); fieldContainer->addWidget(tmp, 8, 0, 1, 1);
     tmp = NULL;
 
+    // Control button
     controlButton = new QPushButton("Play");
     controlButton->setEnabled(false);
 
+    // Result label
     resultExtension = new QLabel("You shouldn't see this text!");
     resultExtension->setFont(QFont("Calibri", 14));
     resultExtension->setAlignment(Qt::AlignCenter);
@@ -116,13 +128,14 @@ Window::Window(QWidget *parent) : QMainWindow(parent)
     field->setGui(gui);
 
     QWidget* blankWidget = new QWidget;
-    this->setCentralWidget(blankWidget);
-    this->centralWidget()->setLayout(layout);
+    setCentralWidget(blankWidget);
+    centralWidget()->setLayout(layout);
 
     QPoint center = QApplication::desktop()->screenGeometry(QApplication::desktop()->primaryScreen()).center();
+    // FIXME: change to application size
     center.setX(center.x() - 120);
     center.setY(center.y() - 200);
-    this->move(center);
+    move(center);
 
     QIcon appIcon;
     appIcon.addFile(":/res/tray.png", QSize(16, 16));
@@ -165,7 +178,8 @@ void Window::createMenus()
 
 void Window::chooseAexe(const QString&)
 {
-    QString from = QFileDialog::getOpenFileName(this, "Open file", "", "*.exe");
+    //QString from = QFileDialog::getOpenFileName(this, "Open file", "", "*.exe");
+    QString from = QFileDialog::getOpenFileName(this, "Open file");
 
     if (!from.isEmpty())
     {
@@ -176,7 +190,8 @@ void Window::chooseAexe(const QString&)
 
 void Window::chooseBexe(const QString&)
 {
-    QString from = QFileDialog::getOpenFileName(this, "Open file", "", "*.exe");
+    //QString from = QFileDialog::getOpenFileName(this, "Open file", "", "*.exe");
+    QString from = QFileDialog::getOpenFileName(this, "Open file");
 
     if (!from.isEmpty())
     {
@@ -241,6 +256,9 @@ void Window::loadGame()
         {
             if (!old.remove())
             {
+                // TODO: check this on windows
+                int perm = old.permissions();
+                qDebug() << perm;
                 QMessageBox::critical(this, "Error", "Can't remove old matrix.txt");
                 return;
             }
@@ -248,7 +266,10 @@ void Window::loadGame()
 
         QFile::copy(from, "matrix.txt");
 
-        QFile::setPermissions("matrix.txt", QFile::ReadOwner | QFile::WriteOwner);
+        QFile::setPermissions("matrix.txt",
+                              QFile::ReadUser | QFile::WriteUser |
+                              QFile::ReadGroup | QFile::WriteGroup |
+                              QFile::ReadOther | QFile::WriteOther);
     }
 
     resetGUI();
@@ -599,10 +620,10 @@ void Window::resetGUI()
     controlButton->setEnabled(false);
 
     textLog->setFixedHeight(field->height());
-
-    this->centralWidget()->adjustSize();
-    this->adjustSize();
-    this->setFixedSize(this->size());
+    // TODO: Remove fixing size. Do it after fixing layouts.
+    centralWidget()->adjustSize();
+    adjustSize();
+    setFixedSize(size());
 
     reloadGUI();
 }
@@ -633,9 +654,9 @@ void Window::reloadGUI(int showStep)
     }
     else
     {
-        for (int x = 0; x < p.map.width; x++)
+        for (int x = 0; x < p.map.width(); x++)
         {
-            for (int y = 0; y < p.map.height; y++)
+            for (int y = 0; y < p.map.height(); y++)
             {
                 p.map.set(x, y, '-');
             }
@@ -656,7 +677,7 @@ void Window::reloadGUI(int showStep)
     field->setUpdatesEnabled(true);
     field->repaint();
 
-    this->repaint();
+    repaint();
 }
 
 void Window::reloadGUIMod(QModelIndex i)

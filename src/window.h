@@ -5,6 +5,7 @@
 #include "IMMPGuiImpl.h"
 
 #include <QtGui>
+#include <QDebug>
 
 class Window : public QMainWindow
 {

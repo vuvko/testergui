@@ -42,7 +42,7 @@ namespace logic
             return false;
         }
     };
-}
-}
+} // end of logic namespace
+} // end of mmp namespace
 
 #endif // ERRORS_H

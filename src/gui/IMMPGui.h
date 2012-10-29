@@ -17,7 +17,7 @@ namespace gui
                 if (y < p.y) return true;
                 return false;
         }
-        Point(int x, int y) : x(x), y(y) {}
+        Point(int x_, int y_) : x(x_), y(y_) {}
         Point() {}
     };
 
@@ -87,7 +87,7 @@ namespace gui
         static IMMPGui* getGui();
         virtual ~IMMPGui() {}
     };
-}
-}
+} // end of gui namespace
+} // end of ,,p namespace
 
 #endif // FIELD_H

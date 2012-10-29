@@ -14,6 +14,16 @@ void Map::set(int x, int y, char c)
     _map[x][y] = c;
 }
 
+int Map::width() const
+{
+    return field_width;
+}
+
+int Map::height() const
+{
+    return field_height;
+}
+
 Position Manager::parsePos(const char* matrixPath, int gameId)
 {
     Position p;
@@ -88,9 +98,9 @@ Position Manager::parsePos(const char* matrixPath, int gameId)
     }
 
     char symbol;
-    for (int y = 0; y < height; y++)
+    for (int y = 0; y < field_height; y++)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < field_width; x++)
         {
             if (fin.eof())
             {
@@ -338,9 +348,9 @@ void Manager::paintPos(const Position& p, mmp::gui::IMMPGui* gui)
 {
     Field field;
 
-    for (int x = 0; x < p.map.width; x++)
+    for (int x = 0; x < p.map.width(); x++)
     {
-        for (int y = 0; y < p.map.height; y++)
+        for (int y = 0; y < p.map.height(); y++)
         {
             char symbol = p.map.at(x, y);
             switch (symbol)
