@@ -11,7 +11,7 @@
 #include <map>
 #include <algorithm>
 
-// TODO: make CELL_SIZE changeable (as a some field for an example)
+// TODO: make CELL_SIZE changeable (as field for example)
 enum {CELL_SIZE = 25};
 
 using namespace std;
@@ -221,38 +221,38 @@ namespace gui
             teamColor.insert(pair<int, QColor>(1, QColor(Qt::blue)));
         }
 
-        // Y SO virtual?
-        virtual void SetStar(const Star *star)
+        void SetStar(const Star *star)
         {
             GuiImplementedStar *new_star = new GuiImplementedStar(star);
             starMap.insert(pair<Point, const Star *>(new_star->getPoint(), new_star));
         }
 
-        virtual void SetBlock(const Block *block)
+        void SetBlock(const Block *block)
         {
             GuiImplementedBlock *new_block = new GuiImplementedBlock(block);
             blockMap.insert(pair<Point, const Block *>(new_block->getPoint(), new_block));
         }
 
-        virtual void SetEmpty(const Empty *empty)
+        void SetEmpty(const Empty *empty)
         {
             GuiImplementedEmpty *new_empty = new GuiImplementedEmpty(empty);
             emptyMap.insert(pair<Point, const Empty *>(new_empty->getPoint(), new_empty));
         }
 
-        virtual void SetNumber(const Number *number)
+        void SetNumber(const Number *number)
         {
             GuiImplementedNumber *new_number = new GuiImplementedNumber(number);
             numberMap.insert(pair<Point, const Number *>(new_number->getPoint(), new_number));
         }
 
-        virtual void SetChecker(const Checker *checker)
+        void SetChecker(const Checker *checker)
         {
             GuiImplementedChecker *new_checker = new GuiImplementedChecker(checker);
             checkerMap.insert(pair<Point, const Checker *>(new_checker->getPoint(), new_checker));
         }
 
-        virtual void Clear() // And why not destructor?
+        void Clear() // And why not destructor?
+        //~MMPQtGuiImpl()
         {
             for_each(starMap.begin(), starMap.end(), deleteMap());
             for_each(blockMap.begin(), blockMap.end(), deleteMap());
@@ -266,15 +266,15 @@ namespace gui
             checkerMap.clear();
         }
 
-        virtual void Paint();
+        void Paint();
 
-        virtual void BeginPaint()
+        void BeginPaint()
         {
             paintLock.lock();
             Clear();
         }
 
-        virtual void EndPaint()
+        void EndPaint()
         {
             paintLock.unlock();
         }

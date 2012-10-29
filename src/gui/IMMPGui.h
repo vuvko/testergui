@@ -88,6 +88,6 @@ namespace gui
         virtual ~IMMPGui() {}
     };
 } // end of gui namespace
-} // end of ,,p namespace
+} // end of mmp namespace
 
 #endif // FIELD_H

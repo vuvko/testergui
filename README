@@ -1,3 +1,4 @@
+Current version: 0.8.0
 Current developer: Andrey Shadrikov
 Current task: comment and understand code.
 
@@ -5,4 +6,4 @@ Software:
  - Qt Creator + GCC (on Archlinux)
  - Qt Creator + MinGW (on Win7)
 
-Please report at https://bitbucket.org/vuvko/testergui/issues or notvuvko (at) gmail.com
+Please report any bug at https://bitbucket.org/vuvko/testergui/issues or notvuvko (at) gmail.com
