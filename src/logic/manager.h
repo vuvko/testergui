@@ -18,6 +18,8 @@ namespace mmp
 {
 namespace logic
 {
+    static const int field_width = 8;
+    static const int field_height = 8;
     class Star : public mmp::gui::Star
     {
         Point pos;
@@ -93,14 +95,14 @@ namespace logic
         list<Checker> checkers;
     };
 
-    struct Map
+    class Map
     {
-        static const int width = 8;
-        static const int height = 8;
-
-        char _map[width][height];
-
+        char _map[field_width][field_height];
+    public:
         char at(int x, int y) const;
+        int width() const;
+        int height() const;
+
         void set(int x, int y, char c);
     };
 
@@ -128,15 +130,12 @@ namespace logic
 
     class Manager
     {
-        static const int width = 8;
-        static const int height = 8;
-
     public:
-        static Position parsePos(const char* matrixPath, int gameId);
-        static char* parseTurn(Position& p1, Position &p2);
-        static void paintPos(const Position& p, mmp::gui::IMMPGui* gui);
+        static Position parsePos(const char *matrixPath, int gameId);
+        static char *parseTurn(Position &p1, Position &p2);
+        static void paintPos(const Position &p, mmp::gui::IMMPGui *gui);
     };
-}
-}
+} // end of logic namespace
+} // end of mmp namespace
 
 #endif

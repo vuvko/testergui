@@ -11,7 +11,8 @@
 #include <map>
 #include <algorithm>
 
-#define CELL_SIZE 25
+// TODO: make CELL_SIZE changeable (as a some field for an example)
+enum {CELL_SIZE = 25};
 
 using namespace std;
 
@@ -195,11 +196,11 @@ namespace gui
     {
         FieldWidget *widget;
         QMutex paintLock;
-        map<Point, const Star*> starMap;
-        map<Point, const Block*> blockMap;
-        map<Point, const Empty*> emptyMap;
-        map<Point, const Number*> numberMap;
-        map<Point, const Checker*> checkerMap;
+        map<Point, const Star *> starMap;
+        map<Point, const Block *> blockMap;
+        map<Point, const Empty *> emptyMap;
+        map<Point, const Number *> numberMap;
+        map<Point, const Checker *> checkerMap;
 
     public:
         map<int, QColor> teamColor;
@@ -213,44 +214,45 @@ namespace gui
             checkerMap.clear();
         }
 
-        void init(FieldWidget *widget)
+        void init(FieldWidget *widget_)
         {
-            this->widget = widget;
+            widget = widget_;
             teamColor.insert(pair<int, QColor>(0, QColor(Qt::red)));
             teamColor.insert(pair<int, QColor>(1, QColor(Qt::blue)));
         }
 
+        // Y SO virtual?
         virtual void SetStar(const Star *star)
         {
             GuiImplementedStar *new_star = new GuiImplementedStar(star);
-            starMap.insert(pair<Point, const Star*>(new_star->getPoint(), new_star));
+            starMap.insert(pair<Point, const Star *>(new_star->getPoint(), new_star));
         }
 
         virtual void SetBlock(const Block *block)
         {
             GuiImplementedBlock *new_block = new GuiImplementedBlock(block);
-            blockMap.insert(pair<Point, const Block*>(new_block->getPoint(), new_block));
+            blockMap.insert(pair<Point, const Block *>(new_block->getPoint(), new_block));
         }
 
         virtual void SetEmpty(const Empty *empty)
         {
             GuiImplementedEmpty *new_empty = new GuiImplementedEmpty(empty);
-            emptyMap.insert(pair<Point, const Empty*>(new_empty->getPoint(), new_empty));
+            emptyMap.insert(pair<Point, const Empty *>(new_empty->getPoint(), new_empty));
         }
 
         virtual void SetNumber(const Number *number)
         {
             GuiImplementedNumber *new_number = new GuiImplementedNumber(number);
-            numberMap.insert(pair<Point, const Number*>(new_number->getPoint(), new_number));
+            numberMap.insert(pair<Point, const Number *>(new_number->getPoint(), new_number));
         }
 
         virtual void SetChecker(const Checker *checker)
         {
             GuiImplementedChecker *new_checker = new GuiImplementedChecker(checker);
-            checkerMap.insert(pair<Point, const Checker*>(new_checker->getPoint(), new_checker));
+            checkerMap.insert(pair<Point, const Checker *>(new_checker->getPoint(), new_checker));
         }
 
-        virtual void Clear()
+        virtual void Clear() // And why not destructor?
         {
             for_each(starMap.begin(), starMap.end(), deleteMap());
             for_each(blockMap.begin(), blockMap.end(), deleteMap());
@@ -277,7 +279,7 @@ namespace gui
             paintLock.unlock();
         }
     };
-}
-}
+} // end of gui namespace
+} // end of mmp namespace
 
 #endif

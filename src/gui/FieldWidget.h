@@ -15,8 +15,8 @@ class FieldWidget : public QWidget
     Q_OBJECT
 
 private:
-    QPixmap pix_;
-    QPen pen_;
+    QPixmap pix;
+    QPen pen;
     mmp::gui::IMMPGui* gui;
 
 public:
@@ -24,12 +24,12 @@ public:
 
     void drawObject(const mmp::gui::Point&, const QPixmap&);
 
-    QPixmap const& pixmap() const { return pix_; }
+    QPixmap const& pixmap() const { return pix; }
 
     void clear()
     {
         QPainter painter(this);
-        painter.setPen(pen_);
+        painter.setPen(pen);
         painter.drawRect(0, 0, width(), height());
     }
 
