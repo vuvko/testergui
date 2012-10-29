@@ -1,0 +1,14 @@
+MMP Board 0.8 release.
+
+To compile you will need one of those:
+* Qt SDK 4.6 or higher
+* MSVC2010  + QT libraries + QT Visual Studio Add-in  // Anton Osokin
+http://releases.qt-project.org/vsaddin/qt-vs-addin-1.1.11-opensource.exe
+http://releases.qt-project.org/qt4/source/qt-win-opensource-4.8.3-vs2010.exe
+
+Known issues:
+1. Turn-correctness checking system is still bad.
+2. Starting the second game in the same session might be impossible because file matrix.txt is not correctly supported.
+3. Resizing of the game window is not supported.
+4. Human vs. Computer mode is not supported.
+5. There is no console version of the app.
