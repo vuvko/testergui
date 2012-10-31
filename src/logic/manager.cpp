@@ -24,7 +24,7 @@ int Map::height() const
     return field_height;
 }
 
-Position Manager::parsePos(const char* matrixPath, int gameId)
+Position Manager::parsePos(const char *matrixPath, int gameId)
 {
     Position p;
 
