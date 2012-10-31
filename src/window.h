@@ -1,58 +1,37 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <QtGui>
+#include <QThread>
+#include <QDebug>
+#include <QMessageBox>
+#include <QResizeEvent>
+
 #include "manager.h"
 #include "IMMPGuiImpl.h"
+#include "FieldWidget.h"
+#include "ui_window.h"
+#include "gamechooser.h"
 
-#include <QtGui>
-#include <QDebug>
+using namespace mmp::gui;
+using namespace mmp::logic;
+
+namespace Ui
+{
+    class Window;
+}
 
 class Window : public QMainWindow
 {
     Q_OBJECT
 
-private:
-    QString aPath;
-    QString bPath;
-
-    mmp::gui::MMPQtGuiImpl *gui;
-    mmp::logic::Manager manager;
-    vector<mmp::logic::Position> history;
-
-    int gameId;
-    bool running;
-    QTimer *timer;
-    QProcess *runningApp;
-
-    QVBoxLayout *layout;
-    QGridLayout     *constLayout;
-    QHBoxLayout         *scoreBoard;
-    QLabel                  *leftA;
-    QLabel                  *captA;
-    QLabel                  *scoreA;
-    QLabel                  *scoreB;
-    QLabel                  *captB;
-    QLabel                  *leftB;
-    QPushButton         *controlButton;
-    QGridLayout         *fieldContainer;
-    FieldWidget             *field;
-    QListWidget         *textLog;
-    QLabel          *resultExtension;
-
-    QIcon *appIcon;
-    QAction *newAction;
-    QAction *loadAction;
-    QAction *quitAction;
-
-    void createActions();
-    void createMenus();
-
 public:
     Window(QWidget *parent = 0);
+    ~Window();
 
 public slots:
-    void chooseAexe(const QString&);
-    void chooseBexe(const QString&);
+    void chooseAexe(const QString &);
+    void chooseBexe(const QString &);
     void newGame();
     void loadGame();
 
@@ -72,6 +51,36 @@ private slots:
     void resetGUI();
     void reloadGUI(int showStep = -1);
     void reloadGUIMod(QModelIndex);
+
+protected:
+    void resizeEvent(QResizeEvent *event);
+
+private:
+    enum
+    {
+        LABEL_SIZE = 16,
+        MARGIN_SIZE = 10,
+        SPACING_SIZE = 10,
+        MINIMUM_SIZE = 250
+    };
+    Ui::Window *ui;
+
+    QString aPath;
+    QString bPath;
+
+    mmp::gui::MMPQtGuiImpl *gui;
+    mmp::logic::Manager manager;
+    vector<mmp::logic::Position> history;
+
+    int gameId;
+    bool running;
+    QTimer *timer;
+    QProcess *runningApp;
+    mmp::gui::FieldWidget *field;
+
+    void createActions();
+    void createMenus();
+    void resizeField();
 };
 
 #endif // WINDOW_H
