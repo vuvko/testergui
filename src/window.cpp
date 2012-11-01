@@ -19,7 +19,7 @@ Window::Window(QWidget *parent) : QMainWindow(parent), ui(new Ui::Window)
     ui->fieldFrame->setFixedSize(MINIMUM_SIZE, MINIMUM_SIZE);
 
     timer = new QTimer(this);
-    runningApp = NULL;
+    runningThread = NULL;
 
     // Default applications' paths
     aPath = "A.exe";
@@ -73,7 +73,7 @@ Window::~Window()
 {
     delete ui;
     delete timer;
-    delete runningApp;
+    delete runningThread;
     delete field;
 }
 
@@ -211,21 +211,10 @@ void Window::beginStep()
             reloadGUI();
 
             running = true;
-            // TODO: do it in a separate thread
-            runningApp = new QProcess();
-            runningApp->start(aPath);
-            runningApp->waitForStarted();
-            connect(runningApp, SIGNAL(finished(int)), this, SLOT(endStep(int)));
-            if (!runningApp->waitForFinished(p.leftA * 1000))
-            {
-                runningApp->disconnect();
-                runningApp->kill();
-                running = false;
-                mmp::logic::Position p = *history.rbegin();
-                p.step++;
-                history.push_back(p);
-                walkover('B', "A was too slow");
-            }
+            runningThread = new QProcessThread(aPath, 1, p.leftA, this);
+            runningThread->start();
+            connect(runningThread, SIGNAL(finished()), this, SLOT(endStep()));
+            connect(runningThread, SIGNAL(appTerminated(int)), this, SLOT(appTerminated(int)));
         }
         else
         {
@@ -241,21 +230,10 @@ void Window::beginStep()
             reloadGUI();
 
             running = true;
-            // TODO: do it in a separate thread
-            runningApp = new QProcess();
-            runningApp->start(QString(bPath));
-            runningApp->waitForStarted();
-            connect(runningApp, SIGNAL(finished(int)), this, SLOT(endStep(int)));
-            if (!runningApp->waitForFinished(p.leftB * 1000))
-            {
-                runningApp->disconnect();
-                runningApp->kill();
-                running = false;
-                mmp::logic::Position p = *history.rbegin();
-                p.step++;
-                history.push_back(p);
-                walkover('A', "B was too slow");
-            }
+            runningThread = new QProcessThread(bPath, 2, p.leftB);
+            runningThread->start();
+            connect(runningThread, SIGNAL(finished()), this, SLOT(endStep()));
+            connect(runningThread, SIGNAL(appTerminated(int)), this, SLOT(appTerminated(int)));
         }
         else
         {
@@ -274,10 +252,10 @@ void Window::endStep(int)
     timer->stop();
     ui->controlButton->disconnect();
 
-    if (!runningApp) return;
+    if (!runningThread) return;
     if (!running) return;
 
-    runningApp = NULL;
+    delete runningThread;
 
     if (!updatePosition()) return;
     if (!updateLog()) return;
@@ -522,12 +500,10 @@ void Window::resetGUI()
     timer->stop();
     ui->controlButton->disconnect();
 
-    if (runningApp)
+    if (runningThread && runningThread->isRunning())
     {
-        runningApp->kill();
-        runningApp->waitForFinished();
-        delete runningApp;
-        runningApp = NULL;
+        runningThread->exit(1);
+        delete runningThread;
     }
 
     running = false;
@@ -617,4 +593,40 @@ void Window::resizeEvent(QResizeEvent *)
     resizeField();
 
     repaint();
+}
+
+void Window::appTerminated(int gamer)
+{
+    QString msg;
+    char win;
+    if (gamer == 1)
+    {
+        msg = "A was too slow";
+        win = 'B';
+    } else {
+        msg = "B was too slow";
+        win = 'A';
+    }
+
+    mmp::logic::Position p = *history.rbegin();
+    p.step++;
+    history.push_back(p);
+    walkover(win, msg);
+}
+
+void QProcessThread::run()
+{
+    app = new QProcess();
+    app->start(appPath);
+    app->waitForStarted();
+    connect(app, SIGNAL(finished(int)), this, SLOT(appFinished()));
+    if (!app->waitForFinished(timeLeft * 1000)) {
+        app->disconnect();
+        app->kill();
+        appTerminated(gamer);
+    }
+}
+
+void QProcessThread::appFinished()
+{
 }

@@ -21,6 +21,8 @@ namespace Ui
     class Window;
 }
 
+class QProcessThread;
+
 class Window : public QMainWindow
 {
     Q_OBJECT
@@ -34,6 +36,7 @@ public slots:
     void chooseBexe(const QString &);
     void newGame();
     void loadGame();
+    void appTerminated(int);
 
 private slots:
     void beginStep();
@@ -75,12 +78,46 @@ private:
     int gameId;
     bool running;
     QTimer *timer;
-    QProcess *runningApp;
+    //QProcess *runningApp;
+    QProcessThread *runningThread;
     mmp::gui::FieldWidget *field;
 
     void createActions();
     void createMenus();
     void resizeField();
+};
+
+class QProcessThread : public QThread
+{
+    Q_OBJECT
+
+public:
+    QProcessThread(
+            const QString &path = "",
+            int gamer_ = 1,
+            double maxTime = 30,
+            Window *parent_ = 0) :
+        appPath(path),
+        gamer(gamer_),
+        timeLeft(maxTime),
+        app(),
+        parent(parent_) {}
+
+signals:
+    void appTerminated(int);
+
+protected:
+    void run();
+
+private slots:
+    void appFinished();
+
+private:
+    QString appPath;
+    int gamer;
+    double timeLeft;
+    QProcess *app;
+    Window *parent;
 };
 
 #endif // WINDOW_H
