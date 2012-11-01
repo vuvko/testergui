@@ -30,12 +30,11 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
 
     p.gameId = gameId;
 
-    if (!fopen(matrixPath, "r"))
+    ifstream fin(matrixPath, ifstream::in);
+    if (!fin.good())
     {
         throw Error("No input file");
     }
-
-    ifstream fin(matrixPath);
     char team;
     fin >> team;
     switch (team)
