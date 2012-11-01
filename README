@@ -1,6 +1,6 @@
-Current version: 0.8.0
+Current version: 0.8.1
 Current developer: Andrey Shadrikov
-Current task: comment and understand code.
+Current task: implement time checking
 
 Software: 
  - Qt Creator + GCC (on Archlinux)
