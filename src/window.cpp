@@ -73,7 +73,8 @@ Window::~Window()
 {
     delete ui;
     delete timer;
-    delete runningThread;
+    if (runningThread)
+        delete runningThread;
     delete field;
 }
 
@@ -173,9 +174,6 @@ void Window::loadGame()
         {
             if (!old.remove())
             {
-                // TODO: check this on windows
-                int perm = old.permissions();
-                qDebug() << perm;
                 QMessageBox::critical(this, "Error", "Can't remove old matrix.txt");
                 return;
             }
