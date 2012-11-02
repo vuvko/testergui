@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QResizeEvent>
+#include <QTime>
 
 #include "manager.h"
 #include "IMMPGuiImpl.h"
@@ -37,13 +38,15 @@ public slots:
     void newGame();
     void loadGame();
     void appTerminated(int);
+    void waitEnd();
+    void pauseGame();
 
 private slots:
     void beginStep();
     void endStep(int flag = 0);
 
     bool updatePosition();
-    bool updateLog();
+    bool updateLog(bool cont = true);
     void stopUpdatingLog();
     void endUpdatingLog();
 
@@ -64,7 +67,9 @@ private:
         LABEL_SIZE = 16,
         MARGIN_SIZE = 10,
         SPACING_SIZE = 10,
-        MINIMUM_SIZE = 250
+        MINIMUM_SIZE = 250,
+
+        TIME_PER_TURN = 1000
     };
     Ui::Window *ui;
 
@@ -77,8 +82,9 @@ private:
 
     int gameId;
     bool running;
+    QTime curTime;
+    double workTime;
     QTimer *timer;
-    //QProcess *runningApp;
     QProcessThread *runningThread;
     mmp::gui::FieldWidget *field;
 

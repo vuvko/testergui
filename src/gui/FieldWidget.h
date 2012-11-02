@@ -48,7 +48,7 @@ public:
     }
 
 protected:
-    virtual void paintEvent(QPaintEvent *event)
+    virtual void paintEvent(QPaintEvent *)
     {
         gui->Paint();
     }

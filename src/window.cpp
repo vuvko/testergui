@@ -204,13 +204,15 @@ void Window::beginStep()
         if (QFile(aPath).exists())
         {
             ui->controlButton->disconnect();
-            ui->controlButton->setText("Running...");
-            ui->controlButton->setEnabled(false);
+            ui->controlButton->setText("Pause after turn");
+            ui->controlButton->setEnabled(true);
+            connect(ui->controlButton, SIGNAL(clicked()), this, SLOT(waitEnd()));
             reloadGUI();
 
             running = true;
             runningThread = new QProcessThread(aPath, 1, p.leftA, this);
             runningThread->start();
+            curTime.restart();
             connect(runningThread, SIGNAL(finished()), this, SLOT(endStep()));
             connect(runningThread, SIGNAL(appTerminated(int)), this, SLOT(appTerminated(int)));
         }
@@ -223,13 +225,15 @@ void Window::beginStep()
         if (QFile(bPath).exists())
         {
             ui->controlButton->disconnect();
-            ui->controlButton->setText("Running...");
-            ui->controlButton->setEnabled(false);
+            ui->controlButton->setText("Pause after turn");
+            ui->controlButton->setEnabled(true);
+            connect(ui->controlButton, SIGNAL(clicked()), this, SLOT(waitEnd()));
             reloadGUI();
 
             running = true;
             runningThread = new QProcessThread(bPath, 2, p.leftB);
             runningThread->start();
+            curTime.restart();
             connect(runningThread, SIGNAL(finished()), this, SLOT(endStep()));
             connect(runningThread, SIGNAL(appTerminated(int)), this, SLOT(appTerminated(int)));
         }
@@ -248,6 +252,7 @@ void Window::endStep(int)
 {
     timer->disconnect();
     timer->stop();
+    workTime = curTime.elapsed() / 1000.0; // get time in seconds
     ui->controlButton->disconnect();
 
     if (!runningThread) return;
@@ -266,7 +271,7 @@ bool Window::updatePosition()
         mmp::logic::Position p = manager.parsePos("matrix.txt", gameId);
         if (history.empty())
         {
-            QString entry = QString::number((p.step-1)/2);
+            QString entry = QString::number((p.step - 1) / 2);
             if (p.step % 2 == 0)
             {
                 entry.push_back(". start");
@@ -347,7 +352,7 @@ bool Window::updatePosition()
     return true;
 }
 
-bool Window::updateLog()
+bool Window::updateLog(bool cont)
 {
     mmp::logic::Position *curr = &history.at(history.size() - 1);
     mmp::logic::Position *prev = &history.at(history.size() - 2);
@@ -355,7 +360,7 @@ bool Window::updateLog()
     QString entry("error");
     try
     {
-        char *turn = manager.parseTurn(*prev, *curr);
+        char *turn = manager.parseTurn(*prev, *curr, workTime);
         entry = QString(turn);
         delete[] turn;
     }
@@ -381,8 +386,8 @@ bool Window::updateLog()
     }
 
     if (curr->state == mmp::logic::DRAW_GAME) entry.push_back("=");
-    if (curr->state == mmp::logic::A_HAS_WON) entry.push_back("#");
-    if (curr->state == mmp::logic::B_HAS_WON) entry.push_back("#");
+    else if (curr->state == mmp::logic::A_HAS_WON) entry.push_back("#");
+    else if (curr->state == mmp::logic::B_HAS_WON) entry.push_back("#");
     if (curr->step % 2 == 0)
     {
         entry.push_front(". ");
@@ -398,19 +403,26 @@ bool Window::updateLog()
 
     reloadGUI();
 
-    if (curr->state == mmp::logic::A_GOES || curr->state == mmp::logic::B_GOES)
+    if (cont)
     {
-        ui->controlButton->setText("Pause");
-        ui->controlButton->setEnabled(true);
-        timer->setSingleShot(true);
-        timer->start(666); // What?
-        connect(timer, SIGNAL(timeout()), this, SLOT(beginStep()));
-        connect(ui->controlButton, SIGNAL(clicked()), this,  SLOT(stopUpdatingLog()));
+        if (curr->state == mmp::logic::A_GOES || curr->state == mmp::logic::B_GOES)
+        {
+            ui->controlButton->setText("Pause");
+            ui->controlButton->setEnabled(true);
+            timer->setSingleShot(true);
+            timer->start(TIME_PER_TURN);
+            connect(timer, SIGNAL(timeout()), this, SLOT(beginStep()));
+            connect(ui->controlButton, SIGNAL(clicked()), this,  SLOT(stopUpdatingLog()));
+        }
+        else
+        {
+            ui->controlButton->setText("Play");
+            ui->controlButton->setEnabled(false);
+        }
     }
     else
     {
-        ui->controlButton->setText("Play");
-        ui->controlButton->setEnabled(false);
+        stopUpdatingLog();
     }
 
     reloadGUI();
@@ -543,11 +555,11 @@ void Window::reloadGUI(int showStep)
     }
     else
     {
-        for (int x = 0; x < p.map.width(); x++)
+        for (int x = 0; x < p.field.width(); x++)
         {
-            for (int y = 0; y < p.map.height(); y++)
+            for (int y = 0; y < p.field.height(); y++)
             {
-                p.map.set(x, y, '-');
+                p.field.set(x, y, '-');
             }
         }
         p.leftA = 30.0;
@@ -610,6 +622,31 @@ void Window::appTerminated(int gamer)
     p.step++;
     history.push_back(p);
     walkover(win, msg);
+}
+
+void Window::waitEnd()
+{
+    runningThread->disconnect();
+    ui->controlButton->disconnect();
+    timer->disconnect();
+    connect(runningThread, SIGNAL(finished()), this, SLOT(pauseGame()));
+    connect(runningThread, SIGNAL(appTerminated(int)), this, SLOT(appTerminated(int)));
+}
+
+void Window::pauseGame()
+{
+    timer->disconnect();
+    timer->stop();
+    workTime = curTime.elapsed() / 1000.0; // get time in seconds
+    ui->controlButton->disconnect();
+
+    if (!runningThread) return;
+    if (!running) return;
+
+    delete runningThread;
+
+    if (!updatePosition()) return;
+    if (!updateLog(false)) return;
 }
 
 void QProcessThread::run()
