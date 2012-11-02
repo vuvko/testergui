@@ -1,14 +1,18 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
+// TODO: separate logic from gui. Specifically make logic namespace do not use gui namespace.
+//       It might be usefull when implementing console version... Maybe not to do it...
+
+#include <QFile>
+#include <QDebug>
+
+#include <list>
+#include <fstream>
+
 #include "errors.h"
 
 #include "IMMPGui.h"
-#include "IMMPGuiImpl.h"
-
-#include <QFile>
-
-#include <list>
 
 using mmp::gui::Point;
 
@@ -18,123 +22,129 @@ namespace mmp
 {
 namespace logic
 {
-    static const int field_width = 8;
-    static const int field_height = 8;
-    class Star : public mmp::gui::Star
-    {
-        Point pos;
+static const int field_width = 8;
+static const int field_height = 8;
+static const double eps = 0.001;
 
-    public:
-        Star(const Point &p) : pos(p) {}
-        Star(const mmp::gui::Star *s)
-            : pos(s->getPoint()) {}
+class Star : public mmp::gui::Star
+{
+    Point pos;
 
-        Point getPoint() const { return pos; }
-    };
+public:
+    Star(const Point &p) : pos(p) {}
+    Star(const mmp::gui::Star *s)
+        : pos(s->getPoint()) {}
 
-    class Block : public mmp::gui::Block
-    {
-        Point pos;
+    Point getPoint() const { return pos; }
+};
 
-    public:
-        Block(const Point &p) : pos(p) {}
-        Block(const mmp::gui::Block *b)
-            : pos(b->getPoint()) {}
+class Block : public mmp::gui::Block
+{
+    Point pos;
 
-        Point getPoint() const { return pos; }
-    };
+public:
+    Block(const Point &p) : pos(p) {}
+    Block(const mmp::gui::Block *b)
+        : pos(b->getPoint()) {}
 
-    class Empty : public mmp::gui::Empty
-    {
-        Point pos;
+    Point getPoint() const { return pos; }
+};
 
-    public:
-        Empty(const Point &p) : pos(p) {}
-        Empty(const mmp::gui::Empty *e)
-            : pos(e->getPoint()) {}
+class Empty : public mmp::gui::Empty
+{
+    Point pos;
 
-        Point getPoint() const { return pos; }
-    };
+public:
+    Empty(const Point &p) : pos(p) {}
+    Empty(const mmp::gui::Empty *e)
+        : pos(e->getPoint()) {}
 
-    class Number : public mmp::gui::Number
-    {
-        Point pos;
-        int teamId;
+    Point getPoint() const { return pos; }
+};
 
-    public:
-        Number(const Point &p, int teamId)
-            : pos(p), teamId(teamId) {}
-        Number(const mmp::gui::Number *n)
-            : pos(n->getPoint()), teamId(n->getTeamId()) {}
+class Number : public mmp::gui::Number
+{
+    Point pos;
+    int teamId;
 
-        Point getPoint() const { return pos; }
-        int getTeamId() const { return teamId; }
-    };
+public:
+    Number(const Point &p, int teamId)
+        : pos(p), teamId(teamId) {}
+    Number(const mmp::gui::Number *n)
+        : pos(n->getPoint()), teamId(n->getTeamId()) {}
 
-    class Checker : public mmp::gui::Checker
-    {
-        Point pos;
-        int teamId;
+    Point getPoint() const { return pos; }
+    int getTeamId() const { return teamId; }
+};
 
-    public:
-        Checker(const Point &p, int teamId)
-            : pos(p), teamId(teamId) {}
-        Checker(const mmp::gui::Checker *c)
-            : pos(c->getPoint()), teamId(c->getTeamId()) {}
+class Checker : public mmp::gui::Checker
+{
+    Point pos;
+    int teamId;
 
-        Point getPoint() const { return pos; }
-        int getTeamId() const { return teamId; }
-    };
+public:
+    Checker(const Point &p, int teamId)
+        : pos(p), teamId(teamId) {}
+    Checker(const mmp::gui::Checker *c)
+        : pos(c->getPoint()), teamId(c->getTeamId()) {}
 
-    struct Field
-    {
-        list<Star> stars;
-        list<Block> blocks;
-        list<Empty> emptys;
-        list<Number> numbers;
-        list<Checker> checkers;
-    };
+    Point getPoint() const { return pos; }
+    int getTeamId() const { return teamId; }
+};
 
-    class Map
-    {
-        char _map[field_width][field_height];
-    public:
-        char at(int x, int y) const;
-        int width() const;
-        int height() const;
+struct Field
+{
+    list<Star> stars;
+    list<Block> blocks;
+    list<Empty> emptys;
+    list<Number> numbers;
+    list<Checker> checkers;
+};
 
-        void set(int x, int y, char c);
-    };
+class CharField
+{
+    char field[field_width][field_height];
+public:
+    char at(int x, int y) const;
+    int width() const;
+    int height() const;
 
-    enum GameState
-    {
-        A_GOES,
-        B_GOES,
-        DRAW_GAME,
-        A_HAS_WON,
-        B_HAS_WON
-    };
+    void set(int x, int y, char c);
+};
 
-    struct Position
-    {
-        int gameId;
+enum GameState
+{
+    A_GOES,
+    B_GOES,
+    DRAW_GAME,
+    A_HAS_WON,
+    B_HAS_WON
+};
 
-        GameState state;
-        int step;
+struct Position
+{
+    int gameId;
 
-        int scoreA, scoreB;
-        double leftA, leftB;
+    GameState state;
+    int step;
 
-        Map map;
-    };
+    int scoreA, scoreB;
+    double leftA, leftB;
 
-    class Manager
-    {
-    public:
-        static Position parsePos(const char *matrixPath, int gameId);
-        static char *parseTurn(Position &p1, Position &p2);
-        static void paintPos(const Position &p, mmp::gui::IMMPGui *gui);
-    };
+    CharField field;
+};
+
+class Manager
+{
+public:
+    static Position parsePos(const char *matrixPath, int gameId);
+    static char *parseTurn(Position &p1, Position &p2, double realTime = 30);
+    static void paintPos(const Position &p, mmp::gui::IMMPGui *gui);
+
+private:
+    static const double IOTime = 0.5;
+};
+
 } // end of logic namespace
 } // end of mmp namespace
 

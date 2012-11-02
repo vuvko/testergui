@@ -1,25 +1,26 @@
 #include "manager.h"
 
-#include <fstream>
-
-using namespace mmp::logic;
-
-char Map::at(int x, int y) const
+namespace mmp
 {
-    return _map[x][y];
+namespace logic
+{
+
+char CharField::at(int x, int y) const
+{
+    return field[x][y];
 }
 
-void Map::set(int x, int y, char c)
+void CharField::set(int x, int y, char c)
 {
-    _map[x][y] = c;
+    field[x][y] = c;
 }
 
-int Map::width() const
+int CharField::width() const
 {
     return field_width;
 }
 
-int Map::height() const
+int CharField::height() const
 {
     return field_height;
 }
@@ -57,7 +58,7 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
             throw Error("Turns limit reached");
         }
     }
-
+    // There is no such rule in game rules
     if ((p.step % 2 == 0 && team != 'B')
      || (p.step % 2 == 1 && team != 'A'))
     {
@@ -97,9 +98,9 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
     }
 
     char symbol;
-    for (int y = 0; y < field_height; y++)
+    for (int y = 0; y < field_height; ++y)
     {
-        for (int x = 0; x < field_width; x++)
+        for (int x = 0; x < field_width; ++x)
         {
             if (fin.eof())
             {
@@ -132,7 +133,7 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
                 error.push_back('"');
                 throw Error(error.toStdString().c_str());
             }
-            p.map.set(x, y, symbol);
+            p.field.set(x, y, symbol);
         }
     }
 
@@ -141,7 +142,7 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
     return p;
 }
 
-char* Manager::parseTurn(Position& p1, Position& p2)
+char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
 {
     char diff[8][8];
 
@@ -171,6 +172,33 @@ char* Manager::parseTurn(Position& p1, Position& p2)
         }
     }
 
+    double workTime;
+    if (p1.state == A_GOES && p2.state == B_GOES)
+    {
+        if (qAbs(p1.leftB - p2.leftB) > eps)
+        {
+            throw Error("Corrupted matrix.txt");
+        }
+        workTime = p1.leftA - p2.leftA;
+    }
+    else if (p1.state == B_GOES && p2.state == A_GOES)
+    {
+        if (qAbs(p1.leftA - p2.leftA) > eps)
+        {
+            throw Error("Corrupted matrix.txt");
+        }
+        workTime = p1.leftB - p2.leftB;
+    }
+    else
+    {
+        throw Error("Corrupted matrix.txt");
+    }
+
+    if ((realTime - workTime > IOTime + eps) || (realTime < workTime + eps))
+    {
+        throw Error("Corrupted matrx.txt");
+    }
+
     if (p2.step != p1.step + 1)
     {
         if (!Warning::askToContinue("Current step was not incremented by 1"))
@@ -192,11 +220,11 @@ char* Manager::parseTurn(Position& p1, Position& p2)
         for (int y = 0; y < 8; y++)
         {
             diff[x][y] = '0';
-            if (p1.map.at(x, y) != p2.map.at(x,y))
+            if (p1.field.at(x, y) != p2.field.at(x,y))
             {
-                if (p2.map.at(x, y) == 'A' || p2.map.at(x, y) == 'B')
+                if (p2.field.at(x, y) == 'A' || p2.field.at(x, y) == 'B')
                 {
-                    if (p1.map.at(x, y) == 'A' || p1.map.at(x, y) == 'B')
+                    if (p1.field.at(x, y) == 'A' || p1.field.at(x, y) == 'B')
                     {
                         diff[x][y] = 'x';
                         if (p1.gameId != 2)
@@ -214,7 +242,7 @@ char* Manager::parseTurn(Position& p1, Position& p2)
                 }
                 else
                 {
-                    if (p1.map.at(x, y) == 'A' || p1.map.at(x, y) == 'B')
+                    if (p1.field.at(x, y) == 'A' || p1.field.at(x, y) == 'B')
                     {
                         diff[x][y] = '-';
                         from = mmp::gui::Point(x, y);
@@ -347,11 +375,11 @@ void Manager::paintPos(const Position& p, mmp::gui::IMMPGui* gui)
 {
     Field field;
 
-    for (int x = 0; x < p.map.width(); x++)
+    for (int x = 0; x < p.field.width(); x++)
     {
-        for (int y = 0; y < p.map.height(); y++)
+        for (int y = 0; y < p.field.height(); y++)
         {
-            char symbol = p.map.at(x, y);
+            char symbol = p.field.at(x, y);
             switch (symbol)
             {
             case '-':
@@ -403,3 +431,6 @@ void Manager::paintPos(const Position& p, mmp::gui::IMMPGui* gui)
     gui->EndPaint();
 }
 
+
+} // end of logic namespace
+} // end of mmp namespace

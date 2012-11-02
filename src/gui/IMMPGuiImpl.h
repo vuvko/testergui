@@ -1,10 +1,6 @@
 #ifndef IMMPGUIIMPL_H
 #define IMMPGUIIMPL_H
 
-#include "IMMPGui.h"
-#include "FieldWidget.h"
-#include "QFieldObject.h"
-
 #include <QWidget>
 #include <QImage>
 #include <QPen>
@@ -18,8 +14,9 @@
 #include <map>
 #include <algorithm>
 
-// TODO: make CELL_SIZE changeable (as field for example)
-// in progress...
+#include "IMMPGui.h"
+#include "FieldWidget.h"
+#include "QFieldObject.h"
 
 using namespace std;
 
