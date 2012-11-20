@@ -5,24 +5,9 @@ namespace mmp
 namespace logic
 {
 
-char CharField::at(int x, int y) const
+Manager::Manager() : game(NULL)
 {
-    return field[x][y];
-}
-
-void CharField::set(int x, int y, char c)
-{
-    field[x][y] = c;
-}
-
-int CharField::width() const
-{
-    return field_width;
-}
-
-int CharField::height() const
-{
-    return field_height;
+    game = 0;
 }
 
 Position Manager::parsePos(const char *matrixPath, int gameId)
@@ -31,7 +16,7 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
 
     p.gameId = gameId;
 
-    ifstream fin(matrixPath, ifstream::in);
+    std::ifstream fin(matrixPath, std::ifstream::in);
     if (!fin.good())
     {
         throw Error("No input file");
@@ -51,7 +36,7 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
     }
 
     fin >> p.step;
-    if (p.step > 2*(30) + 1)
+    if (p.step > 2 * MAX_TURNS + 1)
     {
         if (!Warning::askToContinue("Turns limit is reached already"))
         {
@@ -107,34 +92,31 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
                 throw Error("File has ended too early");
             }
             fin >> symbol;
-            switch (symbol)
-            {
-            case 'A':
-            case 'B':
-                break;
-            case '1':
-            case '2':
-                if (gameId == 2)
-                {
-                    throw Error("Numbers detected");
-                }
-                break;
-            case '*':
-                if (gameId == 1)
-                {
-                    throw Error("Asterisks detected");
-                }
-            case '-':
-                break;
-            default:
-                QString error = "Bad symbol detected: ";
-                error.push_back('"');
-                error.push_back(symbol);
-                error.push_back('"');
-                throw Error(error.toStdString().c_str());
-            }
             p.field.set(x, y, symbol);
         }
+    }
+    if (game)
+    {
+        delete game;
+    }
+
+    switch (gameId)
+    {
+    case 1:
+        game = new GameKnights();
+        break;
+    case 2:
+        game = new GameMMP();
+        break;
+    default:
+        throw Error("Unknow game type");
+        break;
+    }
+
+    game->setPosition(p);
+    if (!game->checkField())
+    {
+        throw Error("Corrupted matrix.txt");
     }
 
     fin.close();
@@ -144,8 +126,8 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
 
 char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
 {
-    char diff[8][8];
-
+    // + Time checking
+    // |-- Check for incrementing
     if (p2.leftA > p1.leftA + 0.1 || p2.leftB > p1.leftB + 0.1)
     {
         if (!Warning::askToContinue("Time left number was incremented"))
@@ -153,7 +135,8 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
             throw Error("Corrupted matrix.txt");
         }
     }
-
+    // |-+ Check for non-positive
+    // |-|-- for first player
     if (p2.leftA < 0)
     {
         if (!Warning::askToContinue("Time left for A is negative"))
@@ -162,7 +145,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
             throw Error("Corrupted matrix.txt");
         }
     }
-
+    // |-\-- for second player
     if (p2.leftB < 0)
     {
         if (!Warning::askToContinue("Time left for B is negative"))
@@ -172,6 +155,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         }
     }
 
+    //  |-- Check for changing other player's time
     double workTime;
     if (p1.state == A_GOES && p2.state == B_GOES)
     {
@@ -193,7 +177,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     {
         throw Error("Corrupted matrix.txt");
     }
-
+    // \-- Check for real time working
     if ((realTime - workTime > IOTime + eps) || (realTime < workTime + eps))
     {
         throw Error("Corrupted matrx.txt");
@@ -211,13 +195,18 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     mmp::gui::Point from = mmp::gui::Point(-1, -1);
     mmp::gui::Point to = mmp::gui::Point(-1, -1);
 
+    /*
+     * TODO: do this check as smth like...
+     * check what token was moved. Than try to do such move
+     * and check whether it will generate the same field and score.
+     */
     int kills = 0;
     int pluses = 0;
     int minuses = 0;
-
-    for (int x = 0; x < 8; x++)
+    /*
+    for (int x = 0; x < field_width; x++)
     {
-        for (int y = 0; y < 8; y++)
+        for (int y = 0; y < field_height; y++)
         {
             diff[x][y] = '0';
             if (p1.field.at(x, y) != p2.field.at(x,y))
@@ -252,7 +241,26 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
             }
         }
     }
-
+    */
+    // Find the token we moved
+    for (int y = 0; y < field_height; ++y)
+    {
+        for (int x = 0; x < field_width; ++x)
+        {
+            if (p1.field.at(x,y) != p2.field.at(x,y))
+            {
+                if (isToken(p2.field.at(x,y)))
+                {
+                    to = mmp::gui::Point(x, y);
+                }
+                else
+                {
+                    from = mmp::gui::Point(x, y);
+                }
+            }
+        }
+    }
+    /*
     if (pluses > 1)
     {
         if (!Warning::askToContinue("Too many checkers appeared"))
@@ -360,8 +368,25 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
             break;
         }
     }
+    */
+    game->setPosition(p1);
+    Position p3 = game->checkMove(from, to);
+    if (p3.scoreA != p2.scoreA || p3.scoreB != p2.scoreB || p3.state != p2.state)
+    {
+        throw Error("Corrupted matrix.txt");
+    }
+    for (int y = 0; y < field_height; ++y)
+    {
+        for (int x = 0; x < field_width; ++x)
+        {
+            if (p3.field.at(x, y) != p2.field.at(x, y))
+            {
+                throw Error("Corrupted matrix.txt");
+            }
+        }
+    }
 
-    char* answer = new char[5];
+    char *answer = new char[5];
     answer[0] = 'a' + from.x;
     answer[1] = '8' - from.y;
     answer[2] = 'a' + to.x;
@@ -408,23 +433,23 @@ void Manager::paintPos(const Position& p, mmp::gui::IMMPGui* gui)
     }
 
     gui->BeginPaint();
-    for (list<Star>::iterator s_it = field.stars.begin(); s_it != field.stars.end(); s_it++)
+    for (std::list<Star>::iterator s_it = field.stars.begin(); s_it != field.stars.end(); s_it++)
     {
         gui->SetStar(&*s_it);
     }
-    for (list<Block>::iterator b_it = field.blocks.begin(); b_it != field.blocks.end(); b_it++)
+    for (std::list<Block>::iterator b_it = field.blocks.begin(); b_it != field.blocks.end(); b_it++)
     {
         gui->SetBlock(&*b_it);
     }
-    for (list<Empty>::iterator e_it = field.emptys.begin(); e_it != field.emptys.end(); e_it++)
+    for (std::list<Empty>::iterator e_it = field.emptys.begin(); e_it != field.emptys.end(); e_it++)
     {
         gui->SetEmpty(&*e_it);
     }
-    for (list<Number>::iterator n_it = field.numbers.begin(); n_it != field.numbers.end(); n_it++)
+    for (std::list<Number>::iterator n_it = field.numbers.begin(); n_it != field.numbers.end(); n_it++)
     {
         gui->SetNumber(&*n_it);
     }
-    for (list<Checker>::iterator c_it = field.checkers.begin(); c_it != field.checkers.end(); c_it++)
+    for (std::list<Checker>::iterator c_it = field.checkers.begin(); c_it != field.checkers.end(); c_it++)
     {
         gui->SetChecker(&*c_it);
     }

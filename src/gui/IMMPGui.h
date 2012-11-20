@@ -10,7 +10,7 @@ namespace gui
     struct Point
     {
         int x, y;
-        bool operator< (const Point& p) const
+        bool operator< (const Point &p) const
         {
                 if (x < p.x) return true;
                 if (x > p.x) return false;
@@ -49,7 +49,7 @@ namespace gui
         virtual int getTeamId() const = 0;
         virtual ~Number() {}
 
-        bool operator< (const Number& other) const
+        bool operator< (const Number &other) const
         {
              return false;
         }
@@ -62,7 +62,7 @@ namespace gui
         virtual int getTeamId() const = 0;
         virtual ~Checker() {}
 
-        bool operator< (const Checker& other) const
+        bool operator< (const Checker &other) const
         {
              return false;
         }
@@ -84,7 +84,7 @@ namespace gui
         virtual void BeginPaint() = 0;
         virtual void EndPaint() = 0;
 
-        static IMMPGui* getGui();
+        static IMMPGui *getGui();
         virtual ~IMMPGui() {}
     };
 } // end of gui namespace
