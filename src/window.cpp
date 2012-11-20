@@ -437,6 +437,7 @@ void Window::stopUpdatingLog()
     ui->controlButton->disconnect();
 
     ui->controlButton->setText("Unpause");
+    ui->controlButton->setEnabled(true);
     connect(ui->controlButton, SIGNAL(clicked()), this, SLOT(endUpdatingLog()));
 }
 
@@ -628,6 +629,7 @@ void Window::waitEnd()
 {
     runningThread->disconnect();
     ui->controlButton->disconnect();
+    ui->controlButton->setEnabled(false);
     timer->disconnect();
     connect(runningThread, SIGNAL(finished()), this, SLOT(pauseGame()));
     connect(runningThread, SIGNAL(appTerminated(int)), this, SLOT(appTerminated(int)));
