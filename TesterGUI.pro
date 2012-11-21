@@ -3,4 +3,5 @@ TEMPLATE = subdirs
 SUBDIRS += \
     src/ui \
     src/logic \
-    src/gui
+    src/gui \
+    src/console

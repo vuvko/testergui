@@ -15,7 +15,7 @@ static const int field_height = 8;
 static const double eps = 0.001;
 
 bool isToken(const char c);
-
+/*
 class Star : public mmp::ui::Star
 {
     mmp::ui::Point pos;
@@ -81,6 +81,14 @@ public:
     mmp::ui::Point getPoint() const { return pos; }
     int getTeamId() const { return teamId; }
 };
+*/
+
+typedef mmp::ui::Symbol Star;
+typedef mmp::ui::Symbol Block;
+typedef mmp::ui::Symbol Empty;
+
+typedef mmp::ui::Token Checker;
+typedef mmp::ui::Token Number;
 
 struct Field
 {

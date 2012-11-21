@@ -12,7 +12,7 @@ TARGET = gui
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES += main.cpp \
         window.cpp \
     IMMPGuiImpl.cpp \
     gamechooser.cpp \
