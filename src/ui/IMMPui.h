@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "errors.h"
+#include "../errors.h"
 
 namespace mmp
 {

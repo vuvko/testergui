@@ -14,7 +14,7 @@
 #include <map>
 #include <algorithm>
 
-#include "ui/IMMPui.h"
+#include "IMMPui.h"
 #include "FieldWidget.h"
 #include "QFieldObject.h"
 

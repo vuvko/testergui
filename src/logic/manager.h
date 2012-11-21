@@ -10,9 +10,9 @@
 #include <list>
 #include <fstream>
 
-#include "errors.h"
+#include "../errors.h"
 #include "logic.h"
-#include "ui/IMMPui.h"
+#include "IMMPui.h"
 #include "gamerules.h"
 #include "rules/gameknights.h"
 #include "rules/gamemmp.h"
