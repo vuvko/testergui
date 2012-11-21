@@ -17,8 +17,8 @@ public:
     void setPosition(const Position &pos_);
 
     virtual Position checkMove(
-            const mmp::gui::Point &from,
-            const mmp::gui::Point &to) = 0;
+            const mmp::ui::Point &from,
+            const mmp::ui::Point &to) = 0;
     virtual bool checkField() = 0;
 
 protected:

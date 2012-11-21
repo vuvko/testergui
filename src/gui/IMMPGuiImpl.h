@@ -14,7 +14,7 @@
 #include <map>
 #include <algorithm>
 
-#include "IMMPGui.h"
+#include "ui/IMMPui.h"
 #include "FieldWidget.h"
 #include "QFieldObject.h"
 
@@ -24,6 +24,7 @@ namespace mmp
 {
 namespace gui
 {
+using namespace ui;
 class GuiImplementedStar : public Star
 {
     Point pos;
@@ -90,7 +91,7 @@ public:
     int getTeamId() const { return teamId; }
 };
 
-class MMPQtGuiImpl : public IMMPGui
+class MMPQtGuiImpl : public IMMPui
 {
     FieldWidget *widget;
     QMutex paintLock;

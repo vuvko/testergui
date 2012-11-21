@@ -1,9 +1,6 @@
 #ifndef FIELDWIDGET_HPP
 #define FIELDWIDGET_HPP
 
-#include "IMMPGui.h"
-#include "QFieldObject.h"
-
 #include <QPainter>
 #include <QWidget>
 #include <QPixmap>
@@ -14,6 +11,9 @@
 #include <QWidget>
 
 #include <QDebug>
+
+#include "ui/IMMPui.h"
+#include "QFieldObject.h"
 
 namespace mmp
 {
@@ -26,12 +26,12 @@ class FieldWidget : public QWidget, public QFieldObject
 
 private:
     QPen pen;
-    mmp::gui::IMMPGui *gui;
+    mmp::ui::IMMPui *gui;
 
 public:
     FieldWidget(QWidget *parent = 0);
 
-    void drawObject(const mmp::gui::Point&, const QPixmap&);
+    void drawObject(const mmp::ui::Point &, const QPixmap&);
     void setSize(int size);
     int getSize() const;
 
@@ -42,7 +42,7 @@ public:
         painter.drawRect(0, 0, CELL_NUM * cellSize, CELL_NUM * cellSize);
     }
 
-    void setGui(mmp::gui::IMMPGui *gui)
+    void setGui(mmp::ui::IMMPui *gui)
     {
         this->gui = gui;
     }

@@ -192,8 +192,8 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         }
     }
 
-    mmp::gui::Point from = mmp::gui::Point(-1, -1);
-    mmp::gui::Point to = mmp::gui::Point(-1, -1);
+    mmp::ui::Point from = mmp::ui::Point(-1, -1);
+    mmp::ui::Point to = mmp::ui::Point(-1, -1);
 
     /*
      * TODO: do this check as smth like...
@@ -218,14 +218,14 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
                         diff[x][y] = 'x';
                         if (p1.gameId != 2)
                         {
-                            to = mmp::gui::Point(x, y);
+                            to = mmp::ui::Point(x, y);
                         }
                         kills++;
                     }
                     else
                     {
                         diff[x][y] = '+';
-                        to = mmp::gui::Point(x, y);
+                        to = mmp::ui::Point(x, y);
                         pluses++;
                     }
                 }
@@ -234,7 +234,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
                     if (p1.field.at(x, y) == 'A' || p1.field.at(x, y) == 'B')
                     {
                         diff[x][y] = '-';
-                        from = mmp::gui::Point(x, y);
+                        from = mmp::ui::Point(x, y);
                         minuses++;
                     }
                 }
@@ -251,11 +251,11 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
             {
                 if (isToken(p2.field.at(x,y)))
                 {
-                    to = mmp::gui::Point(x, y);
+                    to = mmp::ui::Point(x, y);
                 }
                 else
                 {
-                    from = mmp::gui::Point(x, y);
+                    from = mmp::ui::Point(x, y);
                 }
             }
         }
@@ -396,7 +396,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     return answer;
 }
 
-void Manager::paintPos(const Position& p, mmp::gui::IMMPGui* gui)
+void Manager::paintPos(const Position& p, mmp::ui::IMMPui* ui)
 {
     Field field;
 
@@ -408,52 +408,52 @@ void Manager::paintPos(const Position& p, mmp::gui::IMMPGui* gui)
             switch (symbol)
             {
             case '-':
-                field.emptys.push_back(Empty(mmp::gui::Point(x, y)));
+                field.emptys.push_back(Empty(mmp::ui::Point(x, y)));
                 break;
             case 'A':
-                field.checkers.push_back(Checker((mmp::gui::Point(x, y)), 0));
+                field.checkers.push_back(Checker((mmp::ui::Point(x, y)), 0));
                 break;
             case 'B':
-                field.checkers.push_back(Checker((mmp::gui::Point(x, y)), 1));
+                field.checkers.push_back(Checker((mmp::ui::Point(x, y)), 1));
                 break;
             case '1':
-                field.numbers.push_back(Number((mmp::gui::Point(x, y)), 1));
+                field.numbers.push_back(Number((mmp::ui::Point(x, y)), 1));
                 break;
             case '2':
-                field.numbers.push_back(Number((mmp::gui::Point(x, y)), 2));
+                field.numbers.push_back(Number((mmp::ui::Point(x, y)), 2));
                 break;
             case '*':
                 if (p.gameId == 2)
-                    field.blocks.push_back(Block(mmp::gui::Point(x, y)));
+                    field.blocks.push_back(Block(mmp::ui::Point(x, y)));
                 if (p.gameId == 3)
-                    field.stars.push_back(Star(mmp::gui::Point(x, y)));
+                    field.stars.push_back(Star(mmp::ui::Point(x, y)));
                 break;
             }
         }
     }
 
-    gui->BeginPaint();
+    ui->BeginPaint();
     for (std::list<Star>::iterator s_it = field.stars.begin(); s_it != field.stars.end(); s_it++)
     {
-        gui->SetStar(&*s_it);
+        ui->SetStar(&*s_it);
     }
     for (std::list<Block>::iterator b_it = field.blocks.begin(); b_it != field.blocks.end(); b_it++)
     {
-        gui->SetBlock(&*b_it);
+        ui->SetBlock(&*b_it);
     }
     for (std::list<Empty>::iterator e_it = field.emptys.begin(); e_it != field.emptys.end(); e_it++)
     {
-        gui->SetEmpty(&*e_it);
+        ui->SetEmpty(&*e_it);
     }
     for (std::list<Number>::iterator n_it = field.numbers.begin(); n_it != field.numbers.end(); n_it++)
     {
-        gui->SetNumber(&*n_it);
+        ui->SetNumber(&*n_it);
     }
     for (std::list<Checker>::iterator c_it = field.checkers.begin(); c_it != field.checkers.end(); c_it++)
     {
-        gui->SetChecker(&*c_it);
+        ui->SetChecker(&*c_it);
     }
-    gui->EndPaint();
+    ui->EndPaint();
 }
 
 

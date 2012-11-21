@@ -7,7 +7,7 @@
 #include "gamerules.h"
 #include "logic.h"
 #include "errors.h"
-#include "IMMPGui.h"
+#include "ui/IMMPui.h"
 
 namespace mmp
 {
@@ -19,7 +19,7 @@ class GameKnights : public GameRules
 public:
     GameKnights();
 
-    Position checkMove(const mmp::gui::Point &from, const mmp::gui::Point &to);
+    Position checkMove(const mmp::ui::Point &from, const mmp::ui::Point &to);
 
 private:
     bool checkEnd();

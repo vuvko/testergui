@@ -20,7 +20,7 @@ namespace logic
 
     struct Warning
     {
-        static bool askToContinue(const char* reason)
+        static bool askToContinue(const char *reason)
         {
             QString msg = QString(reason);
             msg.append(". Continue?");

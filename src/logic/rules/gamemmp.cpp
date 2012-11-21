@@ -8,7 +8,7 @@ namespace logic
 
 GameMMP::GameMMP() {}
 
-Position GameMMP::checkMove(const gui::Point &from, const gui::Point &to)
+Position GameMMP::checkMove(const ui::Point &from, const ui::Point &to)
 {
     if (from.x < 0 || from.x >= field_width || from.y < 0 || from.y >= field_height ||
             to.x < 0 || to.x >= field_width || to.y < 0 || to.y >= field_height ||
@@ -64,7 +64,7 @@ Position GameMMP::checkMove(const gui::Point &from, const gui::Point &to)
     {
         dy = -1;
     }
-    gui::Point fut(from.x + move, from.y + dy);
+    ui::Point fut(from.x + move, from.y + dy);
     pos.field.set(from, SPACE);
     switch (pos.field.at(fut))
     {

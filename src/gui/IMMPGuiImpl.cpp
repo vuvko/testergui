@@ -1,5 +1,3 @@
-#include <map>
-
 #include "IMMPGuiImpl.h"
 
 using namespace std;

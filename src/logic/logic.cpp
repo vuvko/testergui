@@ -15,7 +15,7 @@ char CharField::at(int x, int y) const
     return field[y][x];
 }
 
-char CharField::at(const gui::Point &p) const
+char CharField::at(const ui::Point &p) const
 {
     return field[p.y][p.x];
 }
@@ -25,7 +25,7 @@ void CharField::set(int x, int y, char c)
     field[y][x] = c;
 }
 
-void CharField::set(const gui::Point &p, char c)
+void CharField::set(const ui::Point &p, char c)
 {
     field[p.y][p.x] = c;
 }

@@ -1,6 +1,7 @@
 #include "window.h"
 
 using namespace mmp::gui;
+using namespace mmp::ui;
 using namespace mmp::logic;
 
 Window::Window(QWidget *parent) : QMainWindow(parent), ui(new Ui::Window)
@@ -54,7 +55,8 @@ Window::Window(QWidget *parent) : QMainWindow(parent), ui(new Ui::Window)
     createActions();
     createMenus();
 
-    gui = dynamic_cast<MMPQtGuiImpl *>(IMMPGui::getGui());
+    //gui = dynamic_cast<MMPQtGuiImpl *>(IMMPGui::getGui());
+    gui = new MMPQtGuiImpl;
     if (gui)
     {
         gui->init(field);
@@ -218,7 +220,7 @@ void Window::beginStep()
         }
         else
         {
-            mmp::gui::IMMPGui::ShowError("Cant find A.exe!");
+            mmp::ui::IMMPui::ShowError("Cant find A.exe!");
         }
         break;
     case mmp::logic::B_GOES:
@@ -239,7 +241,7 @@ void Window::beginStep()
         }
         else
         {
-            mmp::gui::IMMPGui::ShowError("Cant find B.exe!");
+            mmp::ui::IMMPui::ShowError("Cant find B.exe!");
         }
         break;
     default:
