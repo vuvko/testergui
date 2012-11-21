@@ -3,9 +3,11 @@
 
 #include <string>
 
+#include "errors.h"
+
 namespace mmp
 {
-namespace gui
+namespace ui
 {
     struct Point
     {
@@ -68,7 +70,7 @@ namespace gui
         }
     };
 
-    class IMMPGui
+    class IMMPui
     {
     public:
         static void ShowError(const std::string error);
@@ -84,10 +86,9 @@ namespace gui
         virtual void BeginPaint() = 0;
         virtual void EndPaint() = 0;
 
-        static IMMPGui *getGui();
-        virtual ~IMMPGui() {}
+        virtual ~IMMPui() {}
     };
-} // end of gui namespace
+} // end of ui namespace
 } // end of mmp namespace
 
 #endif // FIELD_H

@@ -10,7 +10,7 @@ namespace mmp
 {
 namespace gui
 {
-
+using namespace mmp::ui;
 class QFieldObject
 {
 protected:

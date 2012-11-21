@@ -7,7 +7,7 @@ namespace logic
 
 GameKnights::GameKnights() {}
 
-Position GameKnights::checkMove(const mmp::gui::Point &from, const mmp::gui::Point &to)
+Position GameKnights::checkMove(const mmp::ui::Point &from, const mmp::ui::Point &to)
 {
     if (from.x < 0 || from.x >= field_width || from.y < 0 || from.y >= field_height ||
             to.x < 0 || to.y >= field_width || to.x < 0 || to.y >= field_height ||
@@ -108,8 +108,8 @@ Position GameKnights::checkMove(const mmp::gui::Point &from, const mmp::gui::Poi
 
 bool GameKnights::checkEnd()
 {
-    std::vector<mmp::gui::Point> tokensA;
-    std::vector<mmp::gui::Point> tokensB;
+    std::vector<mmp::ui::Point> tokensA;
+    std::vector<mmp::ui::Point> tokensB;
 
     for (int y = 0; y < field_height; ++y)
     {
@@ -118,10 +118,10 @@ bool GameKnights::checkEnd()
             switch (pos.field.at(x, y))
             {
             case FIRST_LETTER:
-                tokensA.push_back(mmp::gui::Point(x, y));
+                tokensA.push_back(mmp::ui::Point(x, y));
                 break;
             case SECOND_LETTER:
-                tokensB.push_back(mmp::gui::Point(x, y));
+                tokensB.push_back(mmp::ui::Point(x, y));
                 break;
             default:
                 break;

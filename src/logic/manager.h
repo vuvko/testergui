@@ -12,7 +12,7 @@
 
 #include "errors.h"
 #include "logic.h"
-#include "IMMPGui.h"
+#include "ui/IMMPui.h"
 #include "gamerules.h"
 #include "rules/gameknights.h"
 #include "rules/gamemmp.h"
@@ -28,7 +28,7 @@ public:
     Manager();
     Position parsePos(const char *matrixPath, int gameId);
     char *parseTurn(Position &p1, Position &p2, double realTime);
-    static void paintPos(const Position &p, mmp::gui::IMMPGui *gui);
+    static void paintPos(const Position &p, mmp::ui::IMMPui *ui);
 
 private:
     static const double IOTime = 0.5; // Maybe change...

@@ -8,7 +8,7 @@ TARGET = MMP
 TEMPLATE = app
 
 HEADERS += src/window.h \
-           src/gui/IMMPGui.h \
+           src/ui/IMMPui.h \
            src/gui/IMMPGuiImpl.h \
            src/gui/FieldWidget.h \
            src/logic/manager.h \
@@ -22,7 +22,7 @@ HEADERS += src/window.h \
 
 SOURCES += src/main.cpp \
            src/window.cpp \
-           src/gui/IMMPGui.cpp \
+           src/ui/IMMPui.cpp \
            src/gui/IMMPGuiImpl.cpp \
            src/gui/FieldWidget.cpp \
            src/logic/manager.cpp \
@@ -30,7 +30,7 @@ SOURCES += src/main.cpp \
     src/logic/gamerules.cpp \
     src/logic/logic.cpp \
     src/logic/rules/gameknights.cpp \
-    src/logic/rules/gamemmp.cpp
+    src/logic/rules/gamemmp.cpp \
 
 RESOURCES += res.qrc
 

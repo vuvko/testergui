@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "IMMPGui.h"
+#include "ui/IMMPui.h"
 
 namespace mmp
 {
@@ -16,69 +16,69 @@ static const double eps = 0.001;
 
 bool isToken(const char c);
 
-class Star : public mmp::gui::Star
+class Star : public mmp::ui::Star
 {
-    mmp::gui::Point pos;
+    mmp::ui::Point pos;
 
 public:
-    Star(const mmp::gui::Point &p) : pos(p) {}
-    Star(const mmp::gui::Star *s)
+    Star(const mmp::ui::Point &p) : pos(p) {}
+    Star(const mmp::ui::Star *s)
         : pos(s->getPoint()) {}
 
-    mmp::gui::Point getPoint() const { return pos; }
+    mmp::ui::Point getPoint() const { return pos; }
 };
 
-class Block : public mmp::gui::Block
+class Block : public mmp::ui::Block
 {
-    mmp::gui::Point pos;
+    mmp::ui::Point pos;
 
 public:
-    Block(const mmp::gui::Point &p) : pos(p) {}
-    Block(const mmp::gui::Block *b)
+    Block(const mmp::ui::Point &p) : pos(p) {}
+    Block(const mmp::ui::Block *b)
         : pos(b->getPoint()) {}
 
-    mmp::gui::Point getPoint() const { return pos; }
+    mmp::ui::Point getPoint() const { return pos; }
 };
 
-class Empty : public mmp::gui::Empty
+class Empty : public mmp::ui::Empty
 {
-    mmp::gui::Point pos;
+    mmp::ui::Point pos;
 
 public:
-    Empty(const mmp::gui::Point &p) : pos(p) {}
-    Empty(const mmp::gui::Empty *e)
+    Empty(const mmp::ui::Point &p) : pos(p) {}
+    Empty(const mmp::ui::Empty *e)
         : pos(e->getPoint()) {}
 
-    mmp::gui::Point getPoint() const { return pos; }
+    mmp::ui::Point getPoint() const { return pos; }
 };
 
-class Number : public mmp::gui::Number
+class Number : public mmp::ui::Number
 {
-    mmp::gui::Point pos;
+    mmp::ui::Point pos;
     int teamId;
 
 public:
-    Number(const mmp::gui::Point &p, int teamId)
+    Number(const mmp::ui::Point &p, int teamId)
         : pos(p), teamId(teamId) {}
-    Number(const mmp::gui::Number *n)
+    Number(const mmp::ui::Number *n)
         : pos(n->getPoint()), teamId(n->getTeamId()) {}
 
-    mmp::gui::Point getPoint() const { return pos; }
+    mmp::ui::Point getPoint() const { return pos; }
     int getTeamId() const { return teamId; }
 };
 
-class Checker : public mmp::gui::Checker
+class Checker : public mmp::ui::Checker
 {
-    mmp::gui::Point pos;
+    mmp::ui::Point pos;
     int teamId;
 
 public:
-    Checker(const mmp::gui::Point &p, int teamId)
+    Checker(const mmp::ui::Point &p, int teamId)
         : pos(p), teamId(teamId) {}
-    Checker(const mmp::gui::Checker *c)
+    Checker(const mmp::ui::Checker *c)
         : pos(c->getPoint()), teamId(c->getTeamId()) {}
 
-    mmp::gui::Point getPoint() const { return pos; }
+    mmp::ui::Point getPoint() const { return pos; }
     int getTeamId() const { return teamId; }
 };
 
@@ -96,12 +96,12 @@ class CharField
     char field[field_height][field_width];
 public:
     char at(int x, int y) const;
-    char at(const mmp::gui::Point &p) const;
+    char at(const mmp::ui::Point &p) const;
     int width() const;
     int height() const;
 
     void set(int x, int y, char c);
-    void set(const mmp::gui::Point &p, char c);
+    void set(const mmp::ui::Point &p, char c);
 };
 
 enum GameState
