@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "ui/IMMPui.h"
+#include "IMMPui.h"
 
 namespace mmp
 {

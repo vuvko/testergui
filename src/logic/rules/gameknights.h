@@ -6,8 +6,8 @@
 
 #include "gamerules.h"
 #include "logic.h"
-#include "errors.h"
-#include "ui/IMMPui.h"
+#include "../errors.h"
+#include "IMMPui.h"
 
 namespace mmp
 {

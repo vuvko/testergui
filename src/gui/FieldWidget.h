@@ -12,7 +12,7 @@
 
 #include <QDebug>
 
-#include "ui/IMMPui.h"
+#include "IMMPui.h"
 #include "QFieldObject.h"
 
 namespace mmp
