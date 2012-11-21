@@ -25,6 +25,7 @@ namespace mmp
 namespace gui
 {
 using namespace ui;
+/*
 class GuiImplementedStar : public Star
 {
     Point pos;
@@ -90,16 +91,25 @@ public:
     Point getPoint() const { return pos; }
     int getTeamId() const { return teamId; }
 };
+*/
+
+typedef Symbol GuiImplementedStar;
+typedef Symbol GuiImplementedBlock;
+typedef Symbol GuiImplementedEmpty;
+
+typedef Token GuiImplementedNumber;
+typedef Token GuiImplementedChecker;
+
 
 class MMPQtGuiImpl : public IMMPui
 {
     FieldWidget *widget;
     QMutex paintLock;
-    map<Point, const Star *> starMap;
-    map<Point, const Block *> blockMap;
-    map<Point, const Empty *> emptyMap;
-    map<Point, const Number *> numberMap;
-    map<Point, const Checker *> checkerMap;
+    map<Point, const Symbol *> starMap;
+    map<Point, const Symbol *> blockMap;
+    map<Point, const Symbol *> emptyMap;
+    map<Point, const Token *> numberMap;
+    map<Point, const Token *> checkerMap;
 
 public:
     map<int, QColor> teamColor;
