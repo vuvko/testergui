@@ -174,18 +174,18 @@ int main(int argc, char *argv[])
     ConsoleUI cui;
 
     // begin game
-    int status;
+    int status = 0;
     QTime timer;
     Position prevPos, curPos;
     bool first = true;
     int player;
-    for (player = 1; !(status = app.playStep(player)); player ^= 1) {
+    for (player = 1; !status; player ^= 1) {
         double workTime = timer.elapsed() / 1000.0;
         cout << "-------------" << endl;
         if (player == FIRST_PLAYER) {
-            cout << "A's turn." << endl;
+            cout << "A's turn: ";
         } else {
-            cout << "B's turn." << endl;
+            cout << "B's turn: ";
         }
 
         try {
@@ -193,7 +193,6 @@ int main(int argc, char *argv[])
         } catch (Error &e) {
             cerr << e.message.toStdString() << endl;
             return 0;
-            // some error.
         }
 
         switch (curPos.state) {
@@ -216,19 +215,23 @@ int main(int argc, char *argv[])
         } else {
             try {
                char *tmp = manager.parseTurn(prevPos, curPos, workTime);
-               turn = tmp;
-               delete tmp;
+               turn = string(tmp);
+               delete[] tmp;
             } catch (Error &e) {
                 cerr << e.message.toStdString() << endl;
                 return 0;
-                // some error
             }
         }
         // painting
         //cout << "| A " << curPos.scoreA << " : " << curPos.scoreB << " B |" << endl;
         //cout << "| " << curPos.leftA << " | " << curPos.leftB << " |" << endl;
-
-        cout << curPos.step << endl;
+        cout << turn << endl;
+        if (player == FIRST_PLAYER) {
+            cout << 'B';
+        } else {
+            cout << 'A';
+        }
+        cout << ' ' << curPos.step << " U" << endl;
         cout << curPos.scoreA << ' ' << curPos.leftA << endl;
         cout << curPos.scoreB << ' ' << curPos.leftB << endl;
         manager.paintPos(curPos, &cui);
@@ -239,6 +242,7 @@ int main(int argc, char *argv[])
         app.setLeftB(curPos.leftB);
 
         timer.restart();
+        status = app.playStep(player);
     }
 
     if (status == 1) {

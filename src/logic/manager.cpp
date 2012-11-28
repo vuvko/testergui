@@ -132,7 +132,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     {
         //if (!Warning::askToContinue("Time left number was incremented"))
         //{
-            throw Error("Corrupted matrix.txt");
+            throw Error("Corrupted matrix.txt: Time left number was incremented");
         //}
     }
     // |-+ Check for non-positive
@@ -142,7 +142,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         //if (!Warning::askToContinue("Time left for A is negative"))
         //{
             p2.leftA = 0;
-            throw Error("Corrupted matrix.txt");
+            throw Error("Corrupted matrix.txt: Time left for A is negative");
         //}
     }
     // |-\-- for second player
@@ -151,7 +151,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         //if (!Warning::askToContinue("Time left for B is negative"))
         //{
             p2.leftB = 0;
-            throw Error("Corrupted matrix.txt");
+            throw Error("Corrupted matrix.txt: Time left for B is negative");
         //}
     }
 
@@ -161,7 +161,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     {
         if (qAbs(p1.leftB - p2.leftB) > eps)
         {
-            throw Error("Corrupted matrix.txt");
+            throw Error("Corrupted matrix.txt: Other player's time was changed");
         }
         workTime = p1.leftA - p2.leftA;
     }
@@ -169,7 +169,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     {
         if (qAbs(p1.leftA - p2.leftA) > eps)
         {
-            throw Error("Corrupted matrix.txt");
+            throw Error("Corrupted matrix.txt: Other player's time was changed");
         }
         workTime = p1.leftB - p2.leftB;
     }
@@ -180,7 +180,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     // \-- Check for real time working
     if ((realTime - workTime > IOTime + eps) || (realTime < workTime + eps))
     {
-        throw Error("Corrupted matrx.txt");
+        throw Error("Corrupted matrx.txt: ");
     }
 
     if (p2.step != p1.step + 1)
@@ -188,7 +188,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         //if (!Warning::askToContinue("Current step was not incremented by 1"))
         //{
             p2.step = p1.step + 1;
-            throw Error("Corrupted matrix.txt");
+            throw Error("Corrupted matrix.txt: Current step was not incremented by 1");
         //}
     }
 
@@ -200,48 +200,6 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
      * check what token was moved. Than try to do such move
      * and check whether it will generate the same field and score.
      */
-    int kills = 0;
-    int pluses = 0;
-    int minuses = 0;
-    /*
-    for (int x = 0; x < field_width; x++)
-    {
-        for (int y = 0; y < field_height; y++)
-        {
-            diff[x][y] = '0';
-            if (p1.field.at(x, y) != p2.field.at(x,y))
-            {
-                if (p2.field.at(x, y) == 'A' || p2.field.at(x, y) == 'B')
-                {
-                    if (p1.field.at(x, y) == 'A' || p1.field.at(x, y) == 'B')
-                    {
-                        diff[x][y] = 'x';
-                        if (p1.gameId != 2)
-                        {
-                            to = mmp::ui::Point(x, y);
-                        }
-                        kills++;
-                    }
-                    else
-                    {
-                        diff[x][y] = '+';
-                        to = mmp::ui::Point(x, y);
-                        pluses++;
-                    }
-                }
-                else
-                {
-                    if (p1.field.at(x, y) == 'A' || p1.field.at(x, y) == 'B')
-                    {
-                        diff[x][y] = '-';
-                        from = mmp::ui::Point(x, y);
-                        minuses++;
-                    }
-                }
-            }
-        }
-    }
-    */
     // Find the token we moved
     for (int y = 0; y < field_height; ++y)
     {
@@ -260,120 +218,12 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
             }
         }
     }
-    /*
-    if (pluses > 1)
-    {
-        if (!Warning::askToContinue("Too many checkers appeared"))
-        {
-            throw Error("Corrupted turn");
-        }
-    }
 
-    if (minuses == 1 && pluses == 1 && kills == 0)
-    {
-        switch (p1.gameId)
-        {
-        case 1:
-            if (((from.x - to.x)*(from.x - to.x) + (from.y - to.y)*(from.y - to.y)) != 5)
-            {
-                if (!Warning::askToContinue("Not knight-ish movement"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            break;
-        case 2:
-            if (p1.step % 2 == 1) // A's turn
-            {
-                if (to.y != (from.y - 1) || (from.x - to.x)*(from.x - to.x) > 1)
-                {
-                    if (!Warning::askToContinue("Not valid movement"))
-                    {
-                        throw Error("Corrupted turn");
-                    }
-                }
-            }
-            if (p1.step % 2 == 0) // B's turn
-            {
-                if (to.y != (from.y + 1) || (from.x - to.x)*(from.x - to.x) > 1)
-                {
-                    if (!Warning::askToContinue("Not valid movement"))
-                    {
-                        throw Error("Corrupted turn");
-                    }
-                }
-            }
-            break;
-        }
-    }
-    else
-    {
-        switch (p1.gameId)
-        {
-        case 1:
-            if (minuses != 1)
-            {
-                if (!Warning::askToContinue("Wrong number of checkers missed"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            break;
-            if ((pluses + kills) != 1)
-            {
-                if (!Warning::askToContinue("Wrong number of checkers killed/come"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            break;
-        case 2:
-            if (minuses != 1 && minuses != 2)
-            {
-                if (!Warning::askToContinue("Wrong number of checkers missed"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            if (kills > 0)
-            {
-                if (!Warning::askToContinue("Some checker was steped over"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            if (pluses != 1)
-            {
-                if (!Warning::askToContinue("Wrong number of checkers come"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            break;
-        case 3:
-            if (minuses != 1)
-            {
-                if (!Warning::askToContinue("Wrong number of checkers missed"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            if ((pluses + kills) > 1)
-            {
-                if (!Warning::askToContinue("Too many checkers killed/come"))
-                {
-                    throw Error("Corrupted turn");
-                }
-            }
-            break;
-        }
-    }
-    */
     game->setPosition(p1);
     Position p3 = game->checkMove(from, to);
     if (p3.scoreA != p2.scoreA || p3.scoreB != p2.scoreB || p3.state != p2.state)
     {
-        throw Error("Corrupted matrix.txt");
+        throw Error("Corrupted matrix.txt: Illegal move");
     }
     for (int y = 0; y < field_height; ++y)
     {
@@ -381,7 +231,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         {
             if (p3.field.at(x, y) != p2.field.at(x, y))
             {
-                throw Error("Corrupted matrix.txt");
+                throw Error("Corrupted matrix.txt: Illegal move");
             }
         }
     }
