@@ -22,54 +22,7 @@ struct Point
     Point(int x_, int y_) : x(x_), y(y_) {}
     Point() {}
 };
-/*
-    class Star
-    {
-    public:
-        virtual Point getPoint() const = 0;
-        virtual ~Star() {}
-    };
 
-    class Block
-    {
-    public:
-        virtual Point getPoint() const = 0;
-        virtual ~Block() {}
-    };
-
-    class Empty
-    {
-    public:
-        virtual Point getPoint() const = 0;
-        virtual ~Empty() {}
-    };
-
-    class Number
-    {
-    public:
-        virtual Point getPoint() const = 0;
-        virtual int getTeamId() const = 0;
-        virtual ~Number() {}
-
-        bool operator< (const Number &other) const
-        {
-             return false;
-        }
-    };
-
-    class Checker
-    {
-    public:
-        virtual Point getPoint() const = 0;
-        virtual int getTeamId() const = 0;
-        virtual ~Checker() {}
-
-        bool operator< (const Checker &other) const
-        {
-             return false;
-        }
-    };
-*/
 class Symbol
 {
     Point pos;
@@ -99,6 +52,7 @@ public:
 typedef Token Number;
 typedef Token Checker;
 
+//! Интерфейс управления
 class IMMPui
 {
 public:

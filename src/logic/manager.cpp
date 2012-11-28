@@ -38,10 +38,10 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
     fin >> p.step;
     if (p.step > 2 * MAX_TURNS + 1)
     {
-        if (!Warning::askToContinue("Turns limit is reached already"))
-        {
+        //if (!Warning::askToContinue("Turns limit is reached already"))
+        //{
             throw Error("Turns limit reached");
-        }
+        //}
     }
     // There is no such rule in game rules
     if ((p.step % 2 == 0 && team != 'B')
@@ -76,10 +76,10 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
 
     if (p.leftA < 0 || p.leftB < 0)
     {
-        if (!Warning::askToContinue("Time has already gone"))
-        {
+        //if (!Warning::askToContinue("Time has already gone"))
+        //{
             throw Error("Time has already gone");
-        }
+        //}
     }
 
     char symbol;
@@ -130,29 +130,29 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     // |-- Check for incrementing
     if (p2.leftA > p1.leftA + 0.1 || p2.leftB > p1.leftB + 0.1)
     {
-        if (!Warning::askToContinue("Time left number was incremented"))
-        {
+        //if (!Warning::askToContinue("Time left number was incremented"))
+        //{
             throw Error("Corrupted matrix.txt");
-        }
+        //}
     }
     // |-+ Check for non-positive
     // |-|-- for first player
     if (p2.leftA < 0)
     {
-        if (!Warning::askToContinue("Time left for A is negative"))
-        {
+        //if (!Warning::askToContinue("Time left for A is negative"))
+        //{
             p2.leftA = 0;
             throw Error("Corrupted matrix.txt");
-        }
+        //}
     }
     // |-\-- for second player
     if (p2.leftB < 0)
     {
-        if (!Warning::askToContinue("Time left for B is negative"))
-        {
+        //if (!Warning::askToContinue("Time left for B is negative"))
+        //{
             p2.leftB = 0;
             throw Error("Corrupted matrix.txt");
-        }
+        //}
     }
 
     //  |-- Check for changing other player's time
@@ -185,11 +185,11 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
 
     if (p2.step != p1.step + 1)
     {
-        if (!Warning::askToContinue("Current step was not incremented by 1"))
-        {
+        //if (!Warning::askToContinue("Current step was not incremented by 1"))
+        //{
             p2.step = p1.step + 1;
             throw Error("Corrupted matrix.txt");
-        }
+        //}
     }
 
     mmp::ui::Point from = mmp::ui::Point(-1, -1);
@@ -396,7 +396,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     return answer;
 }
 
-void Manager::paintPos(const Position& p, mmp::ui::IMMPui* ui)
+void Manager::paintPos(const Position &p, mmp::ui::IMMPui *ui)
 {
     Field field;
 

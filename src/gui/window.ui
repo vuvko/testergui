@@ -20,7 +20,7 @@
    <string>MMPBoard</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../res.qrc">
+   <iconset resource="res.qrc">
     <normaloff>:/res/app.png</normaloff>:/res/app.png</iconset>
   </property>
   <property name="iconSize">
@@ -455,7 +455,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew_game">
    <property name="icon">
-    <iconset resource="../res.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/res/new.png</normaloff>:/res/new.png</iconset>
    </property>
    <property name="text">
@@ -467,7 +467,7 @@
   </action>
   <action name="actionLoad_map">
    <property name="icon">
-    <iconset resource="../res.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/res/load.png</normaloff>:/res/load.png</iconset>
    </property>
    <property name="text">
@@ -479,7 +479,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="../res.qrc">
+    <iconset resource="res.qrc">
      <normaloff>:/res/exit.png</normaloff>:/res/exit.png</iconset>
    </property>
    <property name="text">
@@ -491,7 +491,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res.qrc"/>
+  <include location="res.qrc"/>
  </resources>
  <connections>
   <connection>
