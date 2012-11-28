@@ -21,7 +21,8 @@ public:
         widget->drawObject(star->getPoint(), starPainter.pixmap());
     }
 
-    PaintStar(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :widget(widget), mmpGuiImpl(mmpGuiImpl) {}
+    PaintStar(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :
+        widget(widget), mmpGuiImpl(mmpGuiImpl) {}
 };
 
 class PaintBlock
@@ -38,7 +39,8 @@ public:
         widget->drawObject(block->getPoint(), blockPainter.pixmap());
     }
 
-    PaintBlock(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :widget(widget), mmpGuiImpl(mmpGuiImpl) {}
+    PaintBlock(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :
+        widget(widget), mmpGuiImpl(mmpGuiImpl) {}
 };
 
 class PaintEmpty
@@ -55,7 +57,8 @@ public:
         widget->drawObject(empty->getPoint(), emptyPainter.pixmap());
     }
 
-    PaintEmpty(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :widget(widget), mmpGuiImpl(mmpGuiImpl) {}
+    PaintEmpty(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :
+        widget(widget), mmpGuiImpl(mmpGuiImpl) {}
 };
 
 class PaintNumber
@@ -72,7 +75,8 @@ public:
         widget->drawObject(number->getPoint(), NumberPainter.pixmap());
     }
 
-    PaintNumber(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :widget(widget), mmpGuiImpl(mmpGuiImpl) {}
+    PaintNumber(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :
+        widget(widget), mmpGuiImpl(mmpGuiImpl) {}
 };
 
 class PaintChecker
@@ -89,7 +93,8 @@ public:
         widget->drawObject(checker->getPoint(), checkerPainter.pixmap());
     }
 
-    PaintChecker(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :widget(widget), mmpGuiImpl(mmpGuiImpl) {}
+    PaintChecker(FieldWidget *widget, MMPQtGuiImpl &mmpGuiImpl) :
+        widget(widget), mmpGuiImpl(mmpGuiImpl) {}
 };
 
 void MMPQtGuiImpl::Paint()

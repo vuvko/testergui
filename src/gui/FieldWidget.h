@@ -31,7 +31,7 @@ private:
 public:
     FieldWidget(QWidget *parent = 0);
 
-    void drawObject(const mmp::ui::Point &, const QPixmap&);
+    void drawObject(const mmp::ui::Point &, const QPixmap &);
     void setSize(int size);
     int getSize() const;
 
@@ -39,7 +39,7 @@ public:
     {
         QPainter painter(this);
         painter.setPen(pen);
-        painter.drawRect(0, 0, CELL_NUM * cellSize, CELL_NUM * cellSize);
+        painter.drawRect(0, 0, CELL_NUM *cellSize, CELL_NUM *cellSize);
     }
 
     void setGui(mmp::ui::IMMPui *gui)

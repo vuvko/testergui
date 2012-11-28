@@ -69,7 +69,7 @@ private:
         SPACING_SIZE = 10,
         MINIMUM_SIZE = 250,
 
-        TIME_PER_TURN = 1000
+        TIME_PER_TURN = 100
     };
     Ui::Window *ui;
 
@@ -101,13 +101,11 @@ public:
     QProcessThread(
             const QString &path = "",
             int gamer_ = 1,
-            double maxTime = 30,
-            Window *parent_ = 0) :
+            double maxTime = 30) :
         appPath(path),
         gamer(gamer_),
         timeLeft(maxTime),
-        app(),
-        parent(parent_) {}
+        app() {}
 
 signals:
     void appTerminated(int);
@@ -123,7 +121,6 @@ private:
     int gamer;
     double timeLeft;
     QProcess *app;
-    Window *parent;
 };
 
 #endif // WINDOW_H

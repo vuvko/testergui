@@ -212,7 +212,7 @@ void Window::beginStep()
             reloadGUI();
 
             running = true;
-            runningThread = new QProcessThread(aPath, 1, p.leftA, this);
+            runningThread = new QProcessThread(aPath, 1, p.leftA);
             runningThread->start();
             curTime.restart();
             connect(runningThread, SIGNAL(finished()), this, SLOT(endStep()));

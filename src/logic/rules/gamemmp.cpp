@@ -36,20 +36,6 @@ Position GameMMP::checkMove(const ui::Point &from, const ui::Point &to)
     }
 
     // making move
-    /*
-    pos.field.set(from, SPACE);
-    switch (pos.field.at(to))
-    {
-    case FIRST_PLAYER:
-    case SECOND_PLAYER:
-    case ASTERISK:
-        throw Error("Illegal move");
-        break;
-    default:
-        break;
-    }
-    pos.field.set(to, letter);
-    */
     int move = 0;
     if (from.x < to.x)
     {
