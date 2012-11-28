@@ -16,8 +16,8 @@ namespace console
 //! Константы, требующиеся для вывода интерфейса
 enum
 {
-    FIRST_PLAYER = 1,
-    SECOND_PLAYER = 0,
+    FIRST_PLAYER = 0,
+    SECOND_PLAYER = 1,
     FIRST_LETTER = 'A',
     SECOND_LETTER = 'B',
     SPACE = '-',

@@ -112,12 +112,20 @@ void ConsoleUI::Paint()
     }
     cout << '\\' <<  endl;
     */
-    for (int i = 0; i < field_width; ++i)
+    cout << endl;
+    cout << "  ";
+    for (int i = 0; i < field_width; ++i) {
+        cout << char('a' + i);
+    }
+    cout << endl << endl;
+
+    for (int i = 0; i < field_height; ++i)
     {
         //cout << '|';
-        for (int j = 0; j < field_height; ++j)
+        cout << field_height - i << ' ';
+        for (int j = 0; j < field_width; ++j)
         {
-            cout << char(field[i][j]);
+            cout << char(field[j][i]);
         }
         //cout << '|' <<  endl;
         cout << endl;
