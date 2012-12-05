@@ -16,6 +16,7 @@
 #include "gamerules.h"
 #include "rules/gameknights.h"
 #include "rules/gamemmp.h"
+#include "rules/gamefight.h"
 
 namespace mmp
 {

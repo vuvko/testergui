@@ -15,14 +15,16 @@ SOURCES += manager.cpp \
     rules/gamemmp.cpp \
     rules/gameknights.cpp \
     logic.cpp \
-    gamerules.cpp
+    gamerules.cpp \
+    rules/gamefight.cpp
 
 HEADERS += manager.h\
         logic_global.h \
     rules/gamemmp.h \
     rules/gameknights.h \
     logic.h \
-    gamerules.h
+    gamerules.h \
+    rules/gamefight.h
 
 unix:!symbian {
     maemo5 {
