@@ -24,6 +24,14 @@ enum
     MMP = 'm'
 };
 
+void walkover(int player)
+{
+    if (player == FIRST_PLAYER)
+        cout << "B has won!" << endl;
+    else
+        cout << "A has won!" << endl;
+}
+
 int main(int argc, char *argv[])
 {
     //QCoreApplication a(argc, argv);
@@ -62,20 +70,6 @@ int main(int argc, char *argv[])
         {
             commands.push_back(command((char)code, ArgParser.argument(k).data()));
         }
-        /*
-        else
-        {
-            if (sSourcePath.empty())
-                sSourcePath = ArgParser.argument(k);
-            else if (sResultPath.empty())
-                sResultPath = ArgParser.argument(k);
-            else
-            {
-                cerr<<"invalid unnamed command-line argument"<<endl;
-                return -1;
-            }
-        }
-        */
     }
 
     // Setting up application
@@ -133,13 +127,6 @@ int main(int argc, char *argv[])
         }
     }
 
-
-    app.setFirstPath("/home/andrey/CompPrac/game-knights");
-    app.setSecondPath("/home/andrey/CompPrac/game-knights2");
-    app.setGameId(1);
-
-
-
     if (app.getFirstPath().empty())
     {
         cerr << "No first player." << endl;
@@ -191,7 +178,8 @@ int main(int argc, char *argv[])
         try {
             curPos = manager.parsePos("matrix.txt", app.getGameId());
         } catch (Error &e) {
-            cerr << e.message.toStdString() << endl;
+            cout << e.message.toStdString() << endl;
+            walkover(player);
             return 0;
         }
 
@@ -218,7 +206,8 @@ int main(int argc, char *argv[])
                turn = string(tmp);
                delete[] tmp;
             } catch (Error &e) {
-                cerr << e.message.toStdString() << endl;
+                cout << e.message.toStdString() << endl;
+                walkover(player);
                 return 0;
             }
         }
@@ -247,11 +236,7 @@ int main(int argc, char *argv[])
 
     if (status == 1) {
         cout << "Programm was too slow." << endl;
-        if (player == FIRST_PLAYER) {
-            cout << "B has won!" << endl;
-        } else {
-            cout << "A has won!" << endl;
-        }
+        walkover(player);
     }
 
     return 0;

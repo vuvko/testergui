@@ -108,6 +108,9 @@ Position Manager::parsePos(const char *matrixPath, int gameId)
     case 2:
         game = new GameMMP();
         break;
+    case 3:
+        game = new GameFight();
+        break;
     default:
         throw Error("Unknow game type");
         break;
@@ -195,11 +198,6 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     mmp::ui::Point from = mmp::ui::Point(-1, -1);
     mmp::ui::Point to = mmp::ui::Point(-1, -1);
 
-    /*
-     * TODO: do this check as smth like...
-     * check what token was moved. Than try to do such move
-     * and check whether it will generate the same field and score.
-     */
     // Find the token we moved
     for (int y = 0; y < field_height; ++y)
     {
