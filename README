@@ -1,6 +1,6 @@
-Current version: 0.8.5
+Current version: 0.8.9
 Current developer: Andrey Shadrikov
-Current task: do some standartization
+Current task: test programm
 
 Software: 
  - Qt Creator + GCC (on Archlinux)
