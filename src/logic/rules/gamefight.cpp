@@ -53,15 +53,15 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
 
     int dx = to.x - from.x;
     int dy = to.y - from.y;
-    if (dy)
+    if (dy && dx)
     {
         int d = dx / dy;
-        if (d != 1 || dx != dy * d)
+        if (qAbs(d) != 1 || dx != dy * d)
         {
             throw Error("Illegal move");
         }
     }
-    int dir = sign(dy) + 3 * sign(dx);
+    int dir = -sign(dy) + 3 * sign(dx);
     qDebug() << "Diraction: " << dir;
     int tokenNum = 1;
 
@@ -77,7 +77,7 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
                 ++tokenNum;
         }
         toUpd.x = from.x + sign(dir) * tokenNum;
-        toUpd.y = from.y + sign(dir) * tokenNum;
+        toUpd.y = from.y - sign(dir) * tokenNum;
         break;
     case UP:
     case DOWN:
@@ -87,7 +87,7 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
                 ++tokenNum;
         }
         toUpd.x = from.x;
-        toUpd.y = from.y + sign(dir) * tokenNum;
+        toUpd.y = from.y - sign(dir) * tokenNum;
         break;
     case RIGHT_UP:
     case LEFT_DOWN:
@@ -96,8 +96,8 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
             if (isToken(pos.field.at(field_width - i, i)))
                 ++tokenNum;
         }
-        toUpd.x = from.x - sign(dir) * tokenNum;
-        toUpd.y = from.y + sign(dir) * tokenNum;
+        toUpd.x = from.x + sign(dir) * tokenNum;
+        toUpd.y = from.y - sign(dir) * tokenNum;
         break;
     case RIGHT:
     case LEFT:

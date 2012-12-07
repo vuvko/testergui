@@ -2,6 +2,7 @@
 #define FIELD_H
 
 #include <string>
+#include <QtGui/QMessageBox>
 
 #include "../errors.h"
 

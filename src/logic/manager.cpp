@@ -160,25 +160,25 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
 
     //  |-- Check for changing other player's time
     double workTime;
-    if (p1.state == A_GOES && p2.state == B_GOES)
+    if (p1.state == A_GOES)
     {
-        if (qAbs(p1.leftB - p2.leftB) > eps)
+        if (qAbs(p1.leftB - p2.leftB) > 0.01)
         {
             throw Error("Corrupted matrix.txt: Other player's time was changed");
         }
         workTime = p1.leftA - p2.leftA;
     }
-    else if (p1.state == B_GOES && p2.state == A_GOES)
+    else if (p1.state == B_GOES)
     {
-        if (qAbs(p1.leftA - p2.leftA) > eps)
+        if (qAbs(p1.leftA - p2.leftA) > 0.01)
         {
             throw Error("Corrupted matrix.txt: Other player's time was changed");
         }
         workTime = p1.leftB - p2.leftB;
     }
-    else
+    else if (p1.state == p2.state)
     {
-        throw Error("Corrupted matrix.txt");
+        throw Error("Corrupted matrix.txt: No move?");
     }
     // \-- Check for real time working
     if ((realTime - workTime > IOTime + eps) || (realTime < workTime + eps))
@@ -209,7 +209,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
                 {
                     to = mmp::ui::Point(x, y);
                 }
-                else
+                else if (isToken(p1.field.at(x,y)))
                 {
                     from = mmp::ui::Point(x, y);
                 }
