@@ -20,7 +20,7 @@ Window::Window(QWidget *parent) : QMainWindow(parent), ui(new Ui::Window)
     ui->fieldFrame->setFixedSize(MINIMUM_SIZE, MINIMUM_SIZE);
 
     timer = new QTimer(this);
-    runningThread = NULL;
+    runningThread = 0;
 
     // Default applications' paths
     aPath = "A.exe";
@@ -260,7 +260,7 @@ void Window::endStep(int)
     if (!runningThread) return;
     if (!running) return;
 
-    delete runningThread;
+    delete runningThread; runningThread = 0;
 
     if (!updatePosition()) return;
     if (!updateLog()) return;
@@ -403,7 +403,7 @@ bool Window::updateLog(bool cont)
         new QListWidgetItem(entry, ui->textLog);
     }
 
-    reloadGUI();
+    //reloadGUI();
 
     if (cont)
     {
@@ -516,7 +516,7 @@ void Window::resetGUI()
     if (runningThread && runningThread->isRunning())
     {
         runningThread->exit(1);
-        delete runningThread;
+        delete runningThread; runningThread = 0;
     }
 
     running = false;
@@ -647,7 +647,7 @@ void Window::pauseGame()
     if (!runningThread) return;
     if (!running) return;
 
-    delete runningThread;
+    delete runningThread; runningThread = 0;
 
     if (!updatePosition()) return;
     if (!updateLog(false)) return;

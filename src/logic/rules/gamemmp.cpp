@@ -39,11 +39,11 @@ Position GameMMP::checkMove(const ui::Point &from, const ui::Point &to)
     int move = 0;
     if (from.x < to.x)
     {
-        move = -1;
+        move = 1;
     }
     else if (from.x > to.x)
     {
-        move = 1;
+        move = -1;
     }
     int dy = 1;
     if (player == FIRST_PLAYER)
@@ -98,7 +98,18 @@ Position GameMMP::checkMove(const ui::Point &from, const ui::Point &to)
     }
     pos.field.set(fut, letter);
 
-    checkEnd();
+    if (!checkEnd())
+    {
+        if (player == FIRST_PLAYER)
+        {
+            pos.state = B_GOES;
+        }
+        else
+        {
+            pos.state = A_GOES;
+        }
+    }
+    ++pos.step;
 
     return pos;
 }
@@ -106,12 +117,12 @@ Position GameMMP::checkMove(const ui::Point &from, const ui::Point &to)
 bool GameMMP::checkEnd()
 {
     for (int i = 0; i < pos.field.width(); ++i) {
-        if (pos.field.at(i, 0) == SECOND_LETTER)
+        if (pos.field.at(i, pos.field.height() - 1) == SECOND_LETTER)
         {
             pos.state = B_HAS_WON;
             return true;
         }
-        else if (pos.field.at(i, pos.field.height() - 1) == FIRST_LETTER)
+        else if (pos.field.at(i, 0) == FIRST_LETTER)
         {
             pos.state = A_HAS_WON;
             return true;
