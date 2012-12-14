@@ -71,13 +71,16 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
     {
     case LEFT_UP:
     case RIGHT_DOWN:
-        for (int i = 0; i < field_width; ++i) // нагло предполагаю, что поле квадратное
+        for (int i = -field_width; i < field_width; ++i) // нагло предполагаю, что поле квадратное
         {
-            if (isToken(pos.field.at(i, i)))
+            Point p(from.x + i, from.y + i);
+            if (p.x < 0 || p.y < 0 || p.x >= field_width || p.y >= field_height)
+                continue;
+            if (isToken(pos.field.at(p)))
                 ++tokenNum;
         }
         toUpd.x = from.x + sign(dir) * tokenNum;
-        toUpd.y = from.y - sign(dir) * tokenNum;
+        toUpd.y = from.y + sign(dir) * tokenNum;
         break;
     case UP:
     case DOWN:
@@ -91,9 +94,12 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
         break;
     case RIGHT_UP:
     case LEFT_DOWN:
-        for (int i = 0; i < field_width; ++i) // нагло предполагаю, что поле квадратное
+        for (int i = -field_width; i < field_width; ++i) // нагло предполагаю, что поле квадратное
         {
-            if (isToken(pos.field.at(field_width - i, i)))
+            Point p(from.x + i, from.y - i);
+            if (p.x < 0 || p.y < 0 || p.x >= field_width || p.y >= field_height)
+                continue;
+            if (isToken(pos.field.at(p)))
                 ++tokenNum;
         }
         toUpd.x = from.x + sign(dir) * tokenNum;
@@ -125,6 +131,9 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
     else
         pos.field.set(toUpd, SECOND_LETTER);
 
+    qDebug() << toUpd.x << toUpd.y;
+    qDebug() << tokenNum;
+
     for (int i = -1; i <= 1; ++i)
     {
         if (toUpd.x + i < 0 || toUpd.x + i >= field_width)
@@ -146,13 +155,12 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
         int firstNum = 0, secondNum = 0;
         for (int i = 0; i < field_width; ++i)
             for (int j = 0; j < field_height; ++j)
-                if (isToken(pos.field.at(i, j)))
-                {
-                    if (player == FIRST_PLAYER)
-                        ++firstNum;
-                    else
-                        ++secondNum;
-                }
+            {
+                if (pos.field.at(i, j) == MARK1)
+                    ++firstNum;
+                else if (pos.field.at(i, j) == MARK2)
+                    ++secondNum;
+            }
         if (firstNum > secondNum)
             pos.state = A_HAS_WON;
         else if (firstNum == secondNum)

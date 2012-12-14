@@ -162,7 +162,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     double workTime;
     if (p1.state == A_GOES)
     {
-        if (qAbs(p1.leftB - p2.leftB) > 0.01)
+        if (qAbs(p1.leftB - p2.leftB) > 0.1)
         {
             throw Error("Corrupted matrix.txt: Other player's time was changed");
         }
@@ -170,7 +170,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     }
     else if (p1.state == B_GOES)
     {
-        if (qAbs(p1.leftA - p2.leftA) > 0.01)
+        if (qAbs(p1.leftA - p2.leftA) > 0.1)
         {
             throw Error("Corrupted matrix.txt: Other player's time was changed");
         }
@@ -183,20 +183,30 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     // \-- Check for real time working
     if ((realTime - workTime > IOTime + eps) || (realTime < workTime + eps))
     {
-        throw Error("Corrupted matrx.txt: ");
+        throw Error("Corrupted matrx.txt: Wrong time");
     }
 
     if (p2.step != p1.step + 1)
     {
         //if (!Warning::askToContinue("Current step was not incremented by 1"))
         //{
-            p2.step = p1.step + 1;
+            //p2.step = p1.step + 1;
             throw Error("Corrupted matrix.txt: Current step was not incremented by 1");
         //}
     }
 
     mmp::ui::Point from = mmp::ui::Point(-1, -1);
     mmp::ui::Point to = mmp::ui::Point(-1, -1);
+
+    int token;
+    if (p1.state == A_GOES)
+    {
+        token = 'A';
+    }
+    else
+    {
+        token = 'B';
+    }
 
     // Find the token we moved
     for (int y = 0; y < field_height; ++y)
@@ -205,11 +215,11 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
         {
             if (p1.field.at(x,y) != p2.field.at(x,y))
             {
-                if (isToken(p2.field.at(x,y)))
+                if (p2.field.at(x,y) == token)
                 {
                     to = mmp::ui::Point(x, y);
                 }
-                else if (isToken(p1.field.at(x,y)))
+                else if (p1.field.at(x,y) == token)
                 {
                     from = mmp::ui::Point(x, y);
                 }
