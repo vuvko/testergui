@@ -1,6 +1,8 @@
 //#include <QCoreApplication>
 #include <vector>
 #include <string>
+#include <iomanip>
+#include <map>
 #include <QTime>
 
 #include <QDebug>
@@ -21,8 +23,62 @@ enum
     NEW_GAME = 'g',
     LOAD_FIELD = 'f',
     KNIGHTS = 'k',
-    MMP = 'm'
+    MMP = 'm',
+    FIGHT = 'i',
+    HELP = 'h'
 };
+
+static const char *FIRST_PATH_LONG = "first_player";
+static const char *SECOND_PATH_LONG = "second_player";
+static const char *NEW_GAME_LONG = "game";
+static const char *LOAD_FIELD_LONG = "field";
+static const char *KNIGHTS_LONG = "knights";
+static const char *MMP_LONG = "mmp";
+static const char *FIGHT_LONG = "fight";
+static const char *HELP_LONG = "help";
+
+typedef pair<char, const char *> command;
+
+void print_help(void)
+{
+    cerr << "Application....." << endl;
+    cerr << "Options:" << endl;
+
+    cerr << " -" << char(FIRST_PATH) << " --" << FIRST_PATH_LONG << endl;
+    cerr << "    Declare path to first player." << endl;
+    cerr << endl;
+
+    cerr << " -" << char(SECOND_PATH) << " --" << SECOND_PATH_LONG << endl;
+    cerr << "    Declare path to second player." << endl;
+    cerr << endl;
+
+    cerr << " -" << char(NEW_GAME) << " --" << NEW_GAME_LONG << endl;
+    cerr << "    Declare game type." << endl;
+    cerr << "      1: Knights" << endl;
+    cerr << "      2: MMP" << endl;
+    cerr << "      3: Fight-B" << endl;
+    cerr << endl;
+
+    cerr << " -" << char(LOAD_FIELD) << " --" << LOAD_FIELD_LONG << endl;
+    cerr << "    Declare path to field file." << endl;
+    cerr << endl;
+
+    cerr << " -" << char(KNIGHTS) << " --" << KNIGHTS_LONG << endl;
+    cerr << "    Set game type to 'Knights'" << endl;
+    cerr << endl;
+
+    cerr << " -" << char(MMP) << " --" << MMP_LONG << endl;
+    cerr << "    Set game type to 'MMP'." << endl;
+    cerr << endl;
+
+    cerr << " -" << char(FIGHT) << " --" << FIGHT_LONG << endl;
+    cerr << "    Set game type to 'Fight-B'." << endl;
+    cerr << endl;
+
+    cerr << " -" << char(HELP) << " --" << HELP_LONG << endl;
+    cerr << "    See this output." << endl;
+    cerr << endl;
+}
 
 void walkover(int player)
 {
@@ -34,25 +90,19 @@ void walkover(int player)
 
 int main(int argc, char *argv[])
 {
-    //QCoreApplication a(argc, argv);
-
-    //QCoreApplication::setOrganizationName("Nizhibitsky Eugene");
-    //QCoreApplication::setApplicationName("MMP Board");
-    
-    //return a.exec();
-
-    typedef pair<char, const char *> command;
-
     vector<command> commands;
 
     const Arg_parser::Option Options[] =
     {
-        {FIRST_PATH, "first_player", Arg_parser::yes},
-        {SECOND_PATH, "second_player", Arg_parser::yes},
-        {NEW_GAME, "game", Arg_parser::yes},
-        {KNIGHTS, "knights", Arg_parser::no},
-        {MMP, "mmp", Arg_parser::no},
-        {LOAD_FIELD, "field", Arg_parser::yes}
+        {FIRST_PATH, FIRST_PATH_LONG, Arg_parser::yes},
+        {SECOND_PATH, SECOND_PATH_LONG, Arg_parser::yes},
+        {NEW_GAME, NEW_GAME_LONG, Arg_parser::yes},
+        {KNIGHTS, KNIGHTS_LONG, Arg_parser::no},
+        {MMP, MMP_LONG, Arg_parser::no},
+        {FIGHT, FIGHT_LONG, Arg_parser::no},
+        {LOAD_FIELD, LOAD_FIELD_LONG, Arg_parser::yes},
+
+        {HELP, HELP_LONG, Arg_parser::no}
     };
 
     const Arg_parser ArgParser(argc, argv, Options);
@@ -104,6 +154,7 @@ int main(int argc, char *argv[])
             break;
         case LOAD_FIELD:
             // Load game field
+            app.loadField(commands[i].second);
             break;
         case KNIGHTS:
             if (app.getGameId() != 0) {
@@ -120,6 +171,9 @@ int main(int argc, char *argv[])
                 app.setGameId(2);
             }
             break;
+        case HELP:
+            print_help();
+            return 0;
         default:
             cout << "Unknown option: " << commands[i].first
                  << "; its argument: " << commands[i].second << endl;
@@ -143,13 +197,13 @@ int main(int argc, char *argv[])
     {
         switch (app.getGameId()) {
         case 1:
-            app.loafField(":/res/1.txt");
+            app.loadField(":/res/1.txt");
             break;
         case 2:
-            app.loafField(":/res/2.txt");
+            app.loadField(":/res/2.txt");
             break;
         case 3:
-            app.loafField(":/res/3.txt");
+            app.loadField(":/res/3.txt");
             break;
         default:
             cerr << "Uknown game type." << endl;
@@ -165,8 +219,8 @@ int main(int argc, char *argv[])
     QTime timer;
     Position prevPos, curPos;
     bool first = true;
-    int player;
-    for (player = 1; !status; player ^= 1) {
+    int player = 1;
+    do {
         double workTime = timer.elapsed() / 1000.0;
         cout << "-------------" << endl;
         if (player == FIRST_PLAYER) {
@@ -183,20 +237,6 @@ int main(int argc, char *argv[])
             return 0;
         }
 
-        switch (curPos.state) {
-        case DRAW_GAME:
-            cout << "Draw game." << endl;
-            return 0;
-        case A_HAS_WON:
-            cout << "A has won!" << endl;
-            return 0;
-        case B_HAS_WON:
-            cout << "B has won!" << endl;
-            return 0;
-        default:
-            break;
-        }
-
         string turn;
         if (first) {
             first = false;
@@ -211,16 +251,15 @@ int main(int argc, char *argv[])
                 return 0;
             }
         }
+
         // painting
-        //cout << "| A " << curPos.scoreA << " : " << curPos.scoreB << " B |" << endl;
-        //cout << "| " << curPos.leftA << " | " << curPos.leftB << " |" << endl;
         cout << turn << endl;
         if (player == FIRST_PLAYER) {
             cout << 'B';
         } else {
             cout << 'A';
         }
-        cout << ' ' << curPos.step << " U" << endl;
+        cout << ' ' << curPos.step << endl;
         cout << curPos.scoreA << ' ' << curPos.leftA << endl;
         cout << curPos.scoreB << ' ' << curPos.leftB << endl;
         manager.paintPos(curPos, &cui);
@@ -232,11 +271,26 @@ int main(int argc, char *argv[])
 
         timer.restart();
         status = app.playStep(player);
-    }
+        player ^= 1;
+    } while (curPos.state == A_GOES || curPos.state == B_GOES);
 
     if (status == 1) {
         cout << "Programm was too slow." << endl;
         walkover(player);
+    } else {
+        switch (curPos.state) {
+        case DRAW_GAME:
+            cout << "Draw game." << endl;
+            break;
+        case A_HAS_WON:
+            cout << "A has won!" << endl;
+            break;
+        case B_HAS_WON:
+            cout << "B has won!" << endl;
+            break;
+        default:
+            break;
+        }
     }
 
     return 0;

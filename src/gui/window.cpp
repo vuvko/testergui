@@ -80,10 +80,17 @@ Window::~Window()
     delete field;
 }
 
+void Window::about()
+{
+    QMessageBox::about(this, "Tester GUI.",
+                       "Graphical User Interface for testing program-gamers.");
+}
+
 void Window::createActions()
 {
     QObject::connect(ui->actionNew_game, SIGNAL(triggered()), this, SLOT(newGame()));
     QObject::connect(ui->actionLoad_map, SIGNAL(triggered()), this, SLOT(loadGame()));
+    QObject::connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 }
 
 void Window::createMenus()
@@ -656,9 +663,9 @@ void Window::pauseGame()
 void QProcessThread::run()
 {
     app = new QProcess();
-    app->start(appPath);
-    app->waitForStarted();
     connect(app, SIGNAL(finished(int)), this, SLOT(appFinished()));
+    app->start(appPath);
+    //app->waitForStarted();
     if (!app->waitForFinished(timeLeft * 1000)) {
         app->disconnect();
         app->kill();

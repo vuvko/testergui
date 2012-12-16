@@ -40,7 +40,7 @@ public:
     void setGameId(int gameId_);
     void setLeftA(double aLeft_);
     void setLeftB(double bLeft_);
-    void loafField(const char *path);
+    void loadField(const char *path);
 
     std::string getFirstPath(void) const;
     std::string getSecondPath(void) const;
