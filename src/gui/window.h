@@ -40,6 +40,7 @@ public slots:
     void appTerminated(int);
     void waitEnd();
     void pauseGame();
+    void about();
 
 private slots:
     void beginStep();

@@ -28,7 +28,7 @@ void ConsoleApplication::setGameId(int gameId_)
     gameId = gameId_;
 }
 
-void ConsoleApplication::loafField(const char *path)
+void ConsoleApplication::loadField(const char *path)
 {
     QFile oldField("matrix.txt");
 
@@ -36,7 +36,6 @@ void ConsoleApplication::loafField(const char *path)
     {
         if (!oldField.remove())
         {
-            //QMessageBox::critical(this, "Error", "Can't remove old matrix.txt");
             cerr << "Can't remove old matrix.txt." << endl;
             return;
         }
