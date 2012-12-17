@@ -13,7 +13,7 @@ SOURCES += IMMPui.cpp
 
 HEADERS += IMMPui.h\
         ui_global.h \
-    ../errors.h
+    ../logic/lerrors.h
 
 unix:!symbian {
     maemo5 {

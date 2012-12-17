@@ -10,7 +10,7 @@
 #include <list>
 #include <fstream>
 
-#include "../errors.h"
+#include "lerrors.h"
 #include "logic.h"
 #include "IMMPui.h"
 #include "gamerules.h"

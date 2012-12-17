@@ -24,7 +24,8 @@ HEADERS += manager.h\
     rules/gameknights.h \
     logic.h \
     gamerules.h \
-    rules/gamefight.h
+    rules/gamefight.h \
+    lerrors.h
 
 unix:!symbian {
     maemo5 {

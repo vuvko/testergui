@@ -22,8 +22,7 @@ HEADERS  += window.h \
     QFieldObject.h \
     IMMPGuiImpl.h \
     gamechooser.h \
-    FieldWidget.h \
-    ../errors.h
+    FieldWidget.h
 
 FORMS    += window.ui \
     gamechooser.ui

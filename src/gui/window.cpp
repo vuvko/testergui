@@ -294,7 +294,7 @@ bool Window::updatePosition()
         }
         history.push_back(p);
     }
-    catch (mmp::logic::Error &e)
+    catch (mmp::Error &e)
     {
         QString msg = e.message;
 
@@ -373,7 +373,7 @@ bool Window::updateLog(bool cont)
         entry = QString(turn);
         delete[] turn;
     }
-    catch (mmp::logic::Error &e)
+    catch (mmp::Error &e)
     {
         QString msg = e.message;
 

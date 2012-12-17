@@ -6,7 +6,7 @@
 
 #include "gamerules.h"
 #include "logic.h"
-#include "../errors.h"
+#include "lerrors.h"
 #include "IMMPui.h"
 
 namespace mmp

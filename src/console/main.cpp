@@ -1,4 +1,3 @@
-//#include <QCoreApplication>
 #include <vector>
 #include <string>
 #include <iomanip>
@@ -11,6 +10,7 @@
 #include "consoleui.h"
 #include "application.h"
 #include "arg_parser.h"
+#include "lerrors.h"
 
 using namespace std;
 using namespace mmp::console;
@@ -20,7 +20,7 @@ enum
 {
     FIRST_PATH = '1',
     SECOND_PATH = '2',
-    NEW_GAME = 'g',
+    GAME_TYPE = 'g',
     LOAD_FIELD = 'f',
     KNIGHTS = 'k',
     MMP = 'm',
@@ -30,7 +30,7 @@ enum
 
 static const char *FIRST_PATH_LONG = "first_player";
 static const char *SECOND_PATH_LONG = "second_player";
-static const char *NEW_GAME_LONG = "game";
+static const char *GAME_TYPE_LONG = "game";
 static const char *LOAD_FIELD_LONG = "field";
 static const char *KNIGHTS_LONG = "knights";
 static const char *MMP_LONG = "mmp";
@@ -52,7 +52,7 @@ void print_help(void)
     cerr << "    Declare path to second player." << endl;
     cerr << endl;
 
-    cerr << " -" << char(NEW_GAME) << " --" << NEW_GAME_LONG << endl;
+    cerr << " -" << char(GAME_TYPE) << " --" << GAME_TYPE_LONG << endl;
     cerr << "    Declare game type." << endl;
     cerr << "      1: Knights" << endl;
     cerr << "      2: MMP" << endl;
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     {
         {FIRST_PATH, FIRST_PATH_LONG, Arg_parser::yes},
         {SECOND_PATH, SECOND_PATH_LONG, Arg_parser::yes},
-        {NEW_GAME, NEW_GAME_LONG, Arg_parser::yes},
+        {GAME_TYPE, GAME_TYPE_LONG, Arg_parser::yes},
         {KNIGHTS, KNIGHTS_LONG, Arg_parser::no},
         {MMP, MMP_LONG, Arg_parser::no},
         {FIGHT, FIGHT_LONG, Arg_parser::no},
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
                         app.getSecondPath() << "'." << endl;
             }
             break;
-        case NEW_GAME:
+        case GAME_TYPE:
             if (app.getGameId() != 0) {
                 cerr << "Game type has already been set to " <<
                         app.getGameId() << " ." << endl;
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 
         try {
             curPos = manager.parsePos("matrix.txt", app.getGameId());
-        } catch (Error &e) {
+        } catch (mmp::Error &e) {
             cout << e.message.toStdString() << endl;
             walkover(player);
             return 0;
@@ -245,7 +245,7 @@ int main(int argc, char *argv[])
                char *tmp = manager.parseTurn(prevPos, curPos, workTime);
                turn = string(tmp);
                delete[] tmp;
-            } catch (Error &e) {
+            } catch (mmp::Error &e) {
                 cout << e.message.toStdString() << endl;
                 walkover(player);
                 return 0;
