@@ -159,7 +159,7 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
     }
 
     //  |-- Check for changing other player's time
-    double workTime;
+    double workTime = 0;
     if (p1.state == A_GOES)
     {
         if (qAbs(p1.leftB - p2.leftB) > 0.1)

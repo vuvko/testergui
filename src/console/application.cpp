@@ -102,9 +102,7 @@ int ConsoleApplication::playStep(int player)
         return -1;
     }
     process.start(path);
-    //cerr << path.toStdString() << " : " << timeLeft << endl;
     if (!process.waitForFinished(timeLeft * 1000)) {
-        //cout << "" << endl;
         return 1;
     }
 

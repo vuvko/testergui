@@ -140,7 +140,7 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
             continue;
         for (int j = -1; j <= 1; ++j)
         {
-            if (toUpd.y + j < 0 || toUpd.y + j >= field_height || i == 0 && j == 0 ||
+            if (toUpd.y + j < 0 || toUpd.y + j >= field_height || (i == 0 && j == 0) ||
                     isToken(pos.field.at(toUpd.x + i, toUpd.y + j)))
                 continue;
             if (player == FIRST_PLAYER)
