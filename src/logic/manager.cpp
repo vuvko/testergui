@@ -229,6 +229,12 @@ char *Manager::parseTurn(Position &p1, Position &p2, double realTime)
 
     game->setPosition(p1);
     Position p3 = game->checkMove(from, to);
+    if (p3.gameId == 3 && p3.step < 0)
+    {
+        p3 = p2; // check failed...
+        game->setPosition(p2);
+        p3 = game->checkMove(mmp::ui::Point(-1, -1), to);
+    }
     if (p3.scoreA != p2.scoreA || p3.scoreB != p2.scoreB || p3.state != p2.state)
     {
         throw Error("Corrupted matrix.txt: Illegal move");
