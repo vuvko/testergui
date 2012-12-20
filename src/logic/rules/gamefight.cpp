@@ -10,7 +10,21 @@ int sign(int x)
     return 1;
 }
 
+enum
+{
+    LEFT_UP = -2,
+    UP = 1,
+    RIGHT_UP = 4,
+    RIGHT = 3,
+    RIGHT_DOWN = 2,
+    DOWN = -1,
+    LEFT_DOWN = -4,
+    LEFT = -3,
+    STAY = 0
+};
+
 using namespace mmp::ui;
+using namespace std;
 
 namespace mmp
 {
@@ -21,8 +35,10 @@ GameFight::GameFight() {}
 
 Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
 {
-    if (from.x < 0 || from.x >= field_width || from.y < 0 || from.y >= field_height ||
-            to.x < 0 || to.y >= field_width || to.x < 0 || to.y >= field_height)
+    if (from.x < 0 && from.y < 0)
+        return findMove();
+    if (from.x >= field_width || from.y >= field_height ||
+            to.x >= field_width || to.y >= field_height)
     {
         throw Error("Illegal move");
     }
@@ -38,18 +54,8 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
         throw Error("Wrong player");
     }
 
-    enum
-    {
-        LEFT_UP = -2,
-        UP = 1,
-        RIGHT_UP = 4,
-        RIGHT = 3,
-        RIGHT_DOWN = 2,
-        DOWN = -1,
-        LEFT_DOWN = -4,
-        LEFT = -3,
-        STAY = 0
-    };
+    if (to.x < 0 && to.y < 0)
+        return unknownMove(from);
 
     int dx = to.x - from.x;
     int dy = to.y - from.y;
@@ -63,10 +69,49 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
     }
     int dir = -sign(dy) + 3 * sign(dx);
     qDebug() << "Diraction: " << dir;
-    int tokenNum = 1;
 
     pos.field.set(from, SPACE);
+
+    Point toUpd = moveFrom(from, dir);
+
+    moveTo(toUpd);
+
+    return pos;
+}
+
+bool GameFight::checkEnd()
+{
+    for (int i = 0; i < field_width; ++i) {
+        for (int j = 0; j < field_height; ++j) {
+            if (pos.field.at(i, j) == ASTERISK) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool GameFight::checkField()
+{
+    for (int i = 0; i < field_width; ++i) {
+        for (int j = 0; j < field_height; ++j) {
+            char sym = pos.field.at(i, j);
+            if (sym != FIRST_LETTER && sym != SECOND_LETTER &&
+                    sym != ASTERISK && sym != SPACE &&
+                    sym != MARK1 && sym != MARK2) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+Point GameFight::moveFrom(const Point &from, int dir) const
+{
     Point toUpd;
+    int tokenNum = 1;
     switch (dir)
     {
     case LEFT_UP:
@@ -120,6 +165,13 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
         break;
     }
 
+    qDebug() << "Tokens:" << tokenNum;
+
+    return toUpd;
+}
+
+void GameFight::moveTo(const Point &toUpd)
+{
     if (toUpd.x < 0 || toUpd.y >= field_width || toUpd.x < 0 || toUpd.y >= field_height ||
             pos.field.at(toUpd) == ASTERISK)
     {
@@ -132,7 +184,6 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
         pos.field.set(toUpd, SECOND_LETTER);
 
     qDebug() << toUpd.x << toUpd.y;
-    qDebug() << tokenNum;
 
     for (int i = -1; i <= 1; ++i)
     {
@@ -180,37 +231,76 @@ Position GameFight::checkMove(const ui::Point &from, const ui::Point &to)
         }
     }
 
+    int countFirst = 0, countSecond = 0;
+    for (int j = 0; j < field_height; ++j)
+    {
+        for (int i = 0; i < field_width; ++i)
+        {
+            if (pos.field.at(i, j) == MARK1)
+                ++countFirst;
+            else if (pos.field.at(i, j) == MARK2)
+                ++countSecond;
+        }
+    }
+
+    pos.scoreA = countFirst;
+    pos.scoreB = countSecond;
+
     ++pos.step;
+
+}
+
+Position GameFight::unknownMove(const Point &from)
+{
+    oldPos = pos;
+    oldFrom = from;
+
+    pos.step = -1;
     return pos;
 }
 
-bool GameFight::checkEnd()
+Position GameFight::findMove(void)
 {
-    for (int i = 0; i < field_width; ++i) {
-        for (int j = 0; j < field_height; ++j) {
-            if (pos.field.at(i, j) == ASTERISK) {
-                return false;
-            }
+    Position newPos = pos;
+    bool found = false;
+    for (int dir = -4; dir <= 4 && !found; ++dir)
+    {
+        if (dir == 0)
+            continue;
+        setPosition(oldPos);
+        pos.field.set(oldFrom, SPACE);
+        found = true;
+        Point toUpd = moveFrom(oldFrom, dir);
+        try
+        {
+            moveTo(toUpd);
         }
+        catch (mmp::Error &)
+        {
+            found = false;
+            continue;
+        }
+
+        if (newPos.state != pos.state || newPos.scoreA != pos.scoreA ||
+                newPos.scoreB != pos.scoreB)
+        {
+            found = false;
+            continue;
+        }
+        for (int i = 0; i < field_width; ++i)
+            for (int j = 0; j < field_height; ++j)
+                if (newPos.field.at(i, j) != pos.field.at(i, j))
+                {
+                    found = false;
+                    continue;
+                }
     }
 
-    return true;
-}
+    if (found)
+        return pos;
 
-bool GameFight::checkField()
-{
-    for (int i = 0; i < field_width; ++i) {
-        for (int j = 0; j < field_height; ++j) {
-            char sym = pos.field.at(i, j);
-            if (sym != FIRST_LETTER && sym != SECOND_LETTER &&
-                    sym != ASTERISK && sym != SPACE &&
-                    sym != MARK1 && sym != MARK2) {
-                return false;
-            }
-        }
-    }
-
-    return true;
+    pos.step = -1;
+    return pos;
 }
 
 } // end of logic namespace
