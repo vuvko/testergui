@@ -68,7 +68,7 @@ private:
         LABEL_SIZE = 16,
         MARGIN_SIZE = 10,
         SPACING_SIZE = 10,
-        MINIMUM_SIZE = 320,
+        MINIMUM_SIZE = 300,
 
         TIME_PER_TURN = 100
     };

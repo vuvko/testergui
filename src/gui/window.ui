@@ -96,9 +96,9 @@
        <property name="font">
         <font>
          <family>Verdana</family>
-         <pointsize>14</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="text">
@@ -147,9 +147,10 @@
          <property name="font">
           <font>
            <family>Verdana</family>
-           <pointsize>11</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <italic>false</italic>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -202,7 +203,7 @@
          <property name="font">
           <font>
            <family>Verdana</family>
-           <pointsize>11</pointsize>
+           <pointsize>10</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -262,7 +263,7 @@
          <property name="font">
           <font>
            <family>Verdana</family>
-           <pointsize>11</pointsize>
+           <pointsize>10</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -314,9 +315,9 @@
          <property name="font">
           <font>
            <family>Verdana</family>
-           <pointsize>11</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>10</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -466,7 +467,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
