@@ -38,8 +38,8 @@ public:
         painter.setBrush(QBrush(QColor(Qt::white)));
         painter.drawRect(0, 0, cellSize - 1, cellSize - 1);
         painter.setBrush(QBrush(QColor(Qt::gray)));
-        painter.setFont(QFont("Arial", cellSize));
-        painter.drawText(cellSize / 4, cellSize * 5 / 4, "*");
+        painter.setFont(QFont("Arial", cellSize * 6 / 9));
+        painter.drawText(cellSize / 4 + 2, cellSize * 3 / 4 + 4, "*");
     }
 };
 

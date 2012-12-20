@@ -4,7 +4,7 @@
 #include <string>
 #include <QtGui/QMessageBox>
 
-#include "lerrors.h"
+#include "../logic/lerrors.h"
 
 namespace mmp
 {
