@@ -18,6 +18,8 @@
 #include "rules/gamemmp.h"
 #include "rules/gamefight.h"
 
+#define IOTIMECONST 0.5
+
 namespace mmp
 {
 namespace logic
@@ -32,7 +34,9 @@ public:
     static void paintPos(const Position &p, mmp::ui::IMMPui *ui);
 
 private:
-    static const double IOTime = 0.5; // Maybe change...
+
+    // static const double IOTime = 0.5; // Maybe change... // HACK
+    const double IOTime; // Maybe change..
     enum {MAX_TURNS = 30};
 
     GameRules *game;

@@ -6,6 +6,7 @@
 
 TARGET = ui
 TEMPLATE = lib
+CONFIG += staticlib
 
 DEFINES += UI_LIBRARY
 

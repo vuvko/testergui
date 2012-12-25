@@ -5,7 +5,7 @@ namespace mmp
 namespace logic
 {
 
-Manager::Manager() : game(NULL)
+Manager::Manager() : game(NULL), IOTime(IOTIMECONST) // Maybe change...
 {
     game = 0;
 }
