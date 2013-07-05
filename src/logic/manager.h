@@ -35,8 +35,8 @@ public:
 
 private:
 
-    // static const double IOTime = 0.5; // Maybe change... // HACK
-    const double IOTime; // Maybe change..
+    static const double IOTime = 0.5; // Maybe change... // HACK
+    //const double IOTime; // Maybe change..
     enum {MAX_TURNS = 30};
 
     GameRules *game;

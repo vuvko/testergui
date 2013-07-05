@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
+QT += widgets
 
 TARGET = logic
 TEMPLATE = lib
@@ -27,15 +28,6 @@ HEADERS += manager.h\
     gamerules.h \
     rules/gamefight.h \
     lerrors.h
-
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
 
 #win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../ui/release/ -lui
 #else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../ui/debug/ -lui

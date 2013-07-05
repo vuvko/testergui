@@ -30,7 +30,7 @@ int Token::getTeamId() const
 
 void IMMPui::ShowError(const std::string error)
 {
-    QMessageBox::critical(0, "Fatal Error", QString(error.c_str()), QMessageBox::Ok);
+    QMessageBox::critical(0, "Fatal Error", QString(error.c_str()));
 }
 
 } // end of ui namespace

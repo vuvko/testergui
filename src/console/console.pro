@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
-
-QT       += gui
+QT       += core gui widgets
 
 TARGET = console
 CONFIG   += console

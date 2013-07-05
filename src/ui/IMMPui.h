@@ -2,7 +2,7 @@
 #define FIELD_H
 
 #include <string>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 #include "../logic/lerrors.h"
 
