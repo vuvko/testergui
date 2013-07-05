@@ -2,7 +2,7 @@
 #define LERRORS_H
 
 #include <QString>
-#include <QtGui/QMessageBox>
+#include <QtWidgets/QMessageBox>
 
 namespace mmp
 {

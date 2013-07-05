@@ -5,10 +5,7 @@ namespace mmp
 namespace logic
 {
 
-Manager::Manager() : game(NULL), IOTime(IOTIMECONST) // Maybe change...
-{
-    game = 0;
-}
+Manager::Manager() : game(NULL) {}
 
 Position Manager::parsePos(const char *matrixPath, int gameId)
 {

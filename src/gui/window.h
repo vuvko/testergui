@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <QResizeEvent>
 #include <QTime>
+#include <QDesktopWidget>
+#include <QFileDialog>
 
 #include "manager.h"
 #include "IMMPGuiImpl.h"

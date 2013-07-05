@@ -4,6 +4,7 @@
 #
 #-------------------------------------------------
 
+QT += core widgets
 TARGET = ui
 TEMPLATE = lib
 CONFIG += staticlib
@@ -16,11 +17,3 @@ HEADERS += IMMPui.h\
         ui_global.h \
     ../logic/lerrors.h
 
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
